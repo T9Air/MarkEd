@@ -1,7 +1,6 @@
 import re
 
 search_rules = {
-    "newline": (r"\n", "(newline)"),
     "heading1": (r"^# (.+)$", "(h1)\\1(h1)"),
     "heading2": (r"^## (.+)$", "(h2)\\1(h2)"),
     "heading3": (r"^### (.+)$", "(h3)\\1(h3)"),
@@ -12,5 +11,8 @@ search_rules = {
     "bold": (r"\*\*(.+)\*\*", "(b)\\1(b)"),
     "blockquote": (r"^> (.+)$", "(bq)\\1(bq)"),
     "orderedlist": (r"^\d+\. (.+)$", "(ol)\\1(ol)"),
-    "unorderedlist": (r"^\ - (.+)$")
+    "unorderedlist": (r"^\ - (.+)$", "(ul)\\1(ul)"),
+    "link": (r"\[(.+)]\((.+)\)"),
+    "image": (r"!\[(.+)]\((.+)\)"),
+    "newline": (r"\n", "(newline)")
 }
