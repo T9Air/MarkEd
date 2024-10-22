@@ -4,6 +4,8 @@ from tkinter import filedialog
 
 from markdown_parser import parse_markdown
 
+from converter import parsed_to_readable
+
 # Root window configuration
 root = tk.Tk()
 
@@ -61,13 +63,15 @@ def update_text(event=None):
         realtext_box.config(state="normal")
         realtext_box.delete(1.0, tk.END)
         markdown_text = markdown_box.get(0.0, tk.END)
-        markdown_lines = markdown_text.splitlines()
+        #markdown_lines = markdown_text.splitlines()
         
-        for line in markdown_lines:
-            realtext_box.insert(tk.END, line + "\n")
+        #for line in markdown_lines:
+        #    realtext_box.insert(tk.END, line + "\n")
+        
+        parsed_text = parse_markdown(markdown_text)
+        parsed_to_readable(parsed_text, realtext_box)
         
         realtext_box.config(state="disabled")
-        parse_markdown(markdown_text)
     root.after(1, delayed_update)
 
 markdown_box = tk.Text(markdown_frame, height=15, width=53, yscrollcommand=True)
