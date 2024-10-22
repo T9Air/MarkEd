@@ -12,8 +12,8 @@ search_rules = {
     "blockquote": (r"^> (.+)$", "(bq)\\1(bq)"),
     "orderedlist": (r"^\d+\. (.+)$", "(ol)\\1(ol)"),
     "unorderedlist": (r"^\ - (.+)$", "(ul)\\1(ul)"),
-    #"link": (r"\[(.+)]\((.+)\)"),
-    #"image": (r"!\[(.+)]\((.+)\)"),
+    "link": (r"\[(.+)]\((.+)\)", "(link)(text)//2(text)(address)//1(text)(link)"),
+    "image": (r"!\[(.+)]\((.+)\)", "(image)(text)//2(text)(address)//1(text)(image)"),
     "newline": (r"\n", "(newline)")    
 }
 
