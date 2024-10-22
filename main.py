@@ -2,6 +2,8 @@ import tkinter as tk
 
 from tkinter import filedialog
 
+from markdown_rules import parse_markdown
+
 # Root window configuration
 root = tk.Tk()
 
@@ -64,7 +66,8 @@ def update_text(event=None):
         for line in markdown_lines:
             realtext_box.insert(tk.END, line + "\n")
         
-        realtext_box.config(state="disabled")                            
+        realtext_box.config(state="disabled")
+        parse_markdown(markdown_text)
     root.after(1, delayed_update)
 
 markdown_box = tk.Text(markdown_frame, height=15, width=53, yscrollcommand=True)
