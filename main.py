@@ -2,7 +2,7 @@ import tkinter as tk
 
 from tkinter import filedialog
 
-from markdown_rules import parse_markdown
+from markdown_parser import parse_markdown
 
 # Root window configuration
 root = tk.Tk()
