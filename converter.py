@@ -7,6 +7,7 @@ def parsed_to_readable(parsed_text, textbox):
     
     for line in split_text:
         heading_level = None
+        tag_name = None
         
         # Check for heading levels
         for i in range(1, 7):
