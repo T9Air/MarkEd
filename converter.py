@@ -40,7 +40,7 @@ def parsed_to_readable(parsed_text, textbox):
             font_size = 10
             textbox.tag_configure(tag_name, font=("Arial", font_size))
 
-        textbox.insert(tk.END, line + "\n", tag_name)
+        textbox.insert(tk.END, line, tag_name)
         
         # Bold        
         matches = re.finditer(r"(\(b\))(.+)(\(b\))", line)
@@ -58,7 +58,7 @@ def parsed_to_readable(parsed_text, textbox):
         # Italic
         matches = re.finditer(r"(\(i\))(.+)(\(i\))", line)
         textbox.tag_configure("italic", font=("Arial", font_size, "italic"))
-        textbox.tag_configure("bold and italic", font=("Arial", font_size, "italic", "bold"))
+        textbox.tag_configure("bold and italic", font=("Arial", font_size, "bold", "italic"))
         for match in matches:
             start, end = match.span()
             start_index = f"{line_num}.{start}"
@@ -68,3 +68,5 @@ def parsed_to_readable(parsed_text, textbox):
             textbox.tag_add("italic", start_index, end_index)
             textbox.delete(delete_end, end_index)
             textbox.delete(start_index, delete_start)    
+        
+        textbox.insert(tk.END, "\n")
