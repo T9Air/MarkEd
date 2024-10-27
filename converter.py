@@ -5,6 +5,7 @@ import tkinter as tk
 def parsed_to_readable(parsed_text, textbox):
     split_text = parsed_text.split("(newline)")
     
+    # Headings
     for line in split_text:
         heading_level = None
         tag_name = None
@@ -38,3 +39,14 @@ def parsed_to_readable(parsed_text, textbox):
             textbox.tag_configure(tag_name, font=("Arial", font_size))
 
         textbox.insert(tk.END, line + "\n", tag_name)
+    
+    # Bold
+    text = textbox.get(0.0, tk.END)
+        
+    matches = re.finditer(r"\((b)\)(.+)\((b)\)", text)
+    textbox.tag_configure("bold", font=("Arial", font_size, "bold")) 
+    for match in matches:
+        start, end = match.span()
+        start_index = f"{start + 1}.0"
+        end_index = f"{end + 1}.0"
+        textbox.tag_add("bold", start_index, end_index)
