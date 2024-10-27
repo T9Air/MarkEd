@@ -7,8 +7,11 @@ search_rules = {
     "heading3": (r"^### (.+)$", "(h3)\\1"),
     "heading2": (r"^## (.+)$", "(h2)\\1"),
     "heading1": (r"^# (.+)$", "(h1)\\1"),
+    #TODO: match if there is a bold and italic next to each other
     "bold&italic": (r"\*\*\*(.+)\*\*\*", "(bi)\\1(bi)"),
+    #TODO: match if there are 2 italic's next to each other
     "bold": (r"\*\*(.+)\*\*", "(b)\\1(b)"),
+    #TODO: don't match if any *'s in between
     "italic": (r"\*(.+)\*", "(i)\\1(i)"),
     "blockquote": (r"^> (.+)$", "(bq)\\1(bq)"),
     "orderedlist": (r"^\d+\. (.+)$", "(ol)\\1(ol)"),
