@@ -63,10 +63,6 @@ def update_text(event=None):
         realtext_box.config(state="normal")
         realtext_box.delete(1.0, tk.END)
         markdown_text = markdown_box.get(0.0, tk.END)
-        #markdown_lines = markdown_text.splitlines()
-        
-        #for line in markdown_lines:
-        #    realtext_box.insert(tk.END, line + "\n")
         
         parsed_text = parse_markdown(markdown_text)
         parsed_to_readable(parsed_text, realtext_box)
