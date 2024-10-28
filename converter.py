@@ -44,8 +44,9 @@ def parsed_to_readable(parsed_text, textbox):
         
         # Bold        
         matches = re.finditer(r"(\(b\))(.+)(\(b\))", line)
-        textbox.tag_configure("bold", font=("Arial", font_size, "bold")) 
+        
         for match in matches:
+            textbox.tag_configure("bold", font=("Arial", font_size, "bold")) 
             start, end = match.span()
             start_index = f"{line_num}.{start}"
             end_index = f"{line_num}.{end}"
@@ -57,15 +58,21 @@ def parsed_to_readable(parsed_text, textbox):
             
         # Italic
         matches = re.finditer(r"(\(i\))(.+)(\(i\))", line)
-        textbox.tag_configure("italic", font=("Arial", font_size, "italic"))
-        textbox.tag_configure("bold and italic", font=("Arial", font_size, "bold", "italic"))
+        
         for match in matches:
+            textbox.tag_configure("italic", font=("Arial", font_size, "italic"))
+            textbox.tag_configure("bold and italic", font=("Arial", font_size, "bold", "italic"))
             start, end = match.span()
             start_index = f"{line_num}.{start}"
             end_index = f"{line_num}.{end}"
             delete_start = f"{line_num}.{start + 3}"
             delete_end = f"{line_num}.{end - 3}"
-            textbox.tag_add("italic", start_index, end_index)
+            if heading_level:
+                print(heading_level)
+                textbox.tag_add("bold and italic", start_index, end_index)
+            else:
+                print(heading_level)
+                textbox.tag_add("italic", start_index, end_index)
             textbox.delete(delete_end, end_index)
             textbox.delete(start_index, delete_start)    
         
