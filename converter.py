@@ -5,9 +5,10 @@ import tkinter as tk
 def parsed_to_readable(parsed_text, textbox):
     split_text = parsed_text.split("(newline)")
     for line in split_text:
-        heading_level = None
         font_size = None
         
+        # Headings
+        heading_level = None
         for i in range(1, 7):
             if line.startswith(f"(h{i})"):
                 heading_level = i
@@ -26,12 +27,18 @@ def parsed_to_readable(parsed_text, textbox):
         
         if heading_level:
             heading = "h"
+            bold = "bold"
         else:
             heading = "r"
             font_size = 10
-                             
-        for char in line:
-            textbox.insert(tk.END, char)
+            bold = ""
+        
+        # Adding characters to textbox
+        for char in line:    
+            # Tag name is a combination of all changes
+            tag_name = heading + "," + str(font_size) + "," + bold
+            textbox.tag_configure(tag_name, font=("Arial", font_size, bold))
+            textbox.insert(tk.END, char, tag_name)
             print(font_size)
             
         textbox.insert(tk.END, "\n")
