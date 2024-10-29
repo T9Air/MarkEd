@@ -41,19 +41,45 @@ def parsed_to_readable(parsed_text, textbox):
         for match in matches:
             start, end = match.span()
             bold_indices.append((start, end))
-            bold_characters.extend([i for i in range(start, end + 1)])
+            bold_characters.extend([i for i in range(start + 1, end + 1)])
             
+        # Italic
+        italic_indices = []
+        italic_characters = []
+        matches = re.finditer(r"(\(i\))(.+)(\(i\))", line)
+        
+        for match in matches:
+            start, end = match.span()
+            italic_indices.append((start, end))
+            italic_characters.extend([i for i in range(start + 1, end + 1)])
+
         # Adding characters to textbox
         char_num = 0 # Create a variable to store what number character on the line it is up to
         for char in line:
             char_num = char_num + 1
             
-            if char_num in bold_characters:
-                bold = "bold"
+            if char_num in bold_characters or heading == "h":
+                bold = ",bold"
+            else:
+                bold = ","
+            
+            if char_num in italic_characters:
+                italic = ",italic"
+            else:
+                italic = ","
             
             # Tag name is a combination of all changes
-            tag_name = heading + "," + str(font_size) + "," + bold
-            textbox.tag_configure(tag_name, font=("Arial", font_size, bold))
+            tag_name = heading + str(font_size) + bold + italic
+            
+            if bold == ",bold" and italic == ",italic":
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"))
+            elif bold == ",bold":
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"))
+            elif italic == ",italic":
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"))
+            else:
+                textbox.tag_configure(tag_name, font=("Arial", font_size))
+            
             textbox.insert(tk.END, char, tag_name)
             
         textbox.insert(tk.END, "\n")
