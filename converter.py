@@ -44,7 +44,13 @@ def parsed_to_readable(parsed_text, textbox):
             bold_characters.extend([i for i in range(start, end + 1)])
             
         # Adding characters to textbox
-        for char in line:    
+        char_num = 0 # Create a variable to store what number character on the line it is up to
+        for char in line:
+            char_num = char_num + 1
+            
+            if char_num in bold_characters:
+                bold = "bold"
+            
             # Tag name is a combination of all changes
             tag_name = heading + "," + str(font_size) + "," + bold
             textbox.tag_configure(tag_name, font=("Arial", font_size, bold))
