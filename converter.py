@@ -33,12 +33,21 @@ def parsed_to_readable(parsed_text, textbox):
             font_size = 10
             bold = ""
         
+        # Bold
+        bold_indices = []
+        bold_characters = []
+        matches = re.finditer(r"(\(b\))(.+)(\(b\))", line)
+        
+        for match in matches:
+            start, end = match.span()
+            bold_indices.append((start, end))
+            bold_characters.extend([i for i in range(start, end + 1)])
+            
         # Adding characters to textbox
         for char in line:    
             # Tag name is a combination of all changes
             tag_name = heading + "," + str(font_size) + "," + bold
             textbox.tag_configure(tag_name, font=("Arial", font_size, bold))
             textbox.insert(tk.END, char, tag_name)
-            print(font_size)
             
         textbox.insert(tk.END, "\n")
