@@ -14,14 +14,14 @@ html_rules = {
     "paragraph": (r"(?s)<p>(.+)</p>", "\\1")
 }
 
-search_rules = {
+markdown_rules = {
     "inline_code": (r"\`(.+)\`", "(ic)\\1(ic)"),
     "unordered_list": (r"^\ - (.+)$", "(ul)\\1(ul)"),
     "newline": (r"\n", "(newline)") 
 }
 
 def parse_markdown(markdown_text):
-    for rule_name, (pattern, replacement) in search_rules.items():
+    for rule_name, (pattern, replacement) in markdown_rules.items():
         markdown_text = re.sub(pattern, replacement, markdown_text, flags=re.MULTILINE)
     markdown_text = mistune.html(markdown_text)
     for rule_name, (pattern, replacement) in html_rules.items():
