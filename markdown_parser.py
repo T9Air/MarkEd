@@ -7,9 +7,10 @@ markdown_rules = {
     "heading3": (r"^### (.+)$", "(h3)\\1"),
     "heading2": (r"^## (.+)$", "(h2)\\1"),
     "heading1": (r"^# (.+)$", "(h1)\\1"),
+    "bold": (r"\*\*(.+)\*\*", "(b)\\1(b)"),
     "inline_code": (r"\`(.+)\`", "(ic)\\1(ic)"),
     "unordered_list": (r"^\ - (.+)$", "(ul)\\1(ul)"),
-    "newline": (r"\n", "(newline)")    
+    "newline": (r"\n", "(newline)")
 }
 
 def parse_markdown(markdown_text):
