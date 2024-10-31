@@ -56,29 +56,31 @@ def parsed_to_readable(parsed_text, textbox):
         # Adding characters to textbox
         char_num = 0 # Create a variable to store what number character on the line it is up to
         for char in line:
-            char_num = char_num + 1
+            # char_num = char_num + 1
             
-            if char_num in bold_characters or heading == "h":
-                bold = ",bold"
-            else:
-                bold = ","
+            # if char_num in bold_characters or heading == "h":
+            #     bold = ",bold"
+            # else:
+            #     bold = ","
             
-            if char_num in italic_characters:
-                italic = ",italic"
-            else:
-                italic = ","
+            # if char_num in italic_characters:
+            #     italic = ",italic"
+            # else:
+            #     italic = ","
             
-            # Tag name is a combination of all changes
-            tag_name = heading + str(font_size) + bold + italic
+            # # Tag name is a combination of all changes
+            # tag_name = heading + str(font_size) + bold + italic
             
-            if bold == ",bold" and italic == ",italic":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"))
-            elif bold == ",bold":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"))
-            elif italic == ",italic":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"))
-            else:
-                textbox.tag_configure(tag_name, font=("Arial", font_size))
+            # if bold == ",bold" and italic == ",italic":
+            #     textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"))
+            # elif bold == ",bold":
+            #     textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"))
+            # elif italic == ",italic":
+            #     textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"))
+            # else:
+            #     textbox.tag_configure(tag_name, font=("Arial", font_size))
             
-            textbox.insert(tk.END, char, tag_name)
+            # textbox.insert(tk.END, char, tag_name)
+            textbox.insert(tk.END, char)
+
         textbox.insert(tk.END, "\n")
