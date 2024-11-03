@@ -15,6 +15,37 @@ def parse_markdown(markdown_text):
     lines = markdown_text.splitlines()
     processed = []
     
+    # Bold
+    for line in lines:
+        astericks = -1
+        pair1 = 0
+        pair2 = 0
+        space = 0
+        i = 0
+        while i < len(line):
+            if pair1 == 0 and line[i] == "*":
+                if i < len(line) - 1 and line[i + 1] == "*":
+                    if i < len(line) - 2 and line[i + 2] == "*":
+                        pair1 = 0
+                    else:
+                        pair1 = 1
+                        astericks = i
+            elif pair1 == 1 and pair2 == 0:
+                if space == 0 and line[i] != "*":
+                    space = 1
+                elif space == 1 and line[i] == "*":
+                    if i < len(line) - 1 and line[i + 1] == "*":
+                        line = line[:i] + "(b)" + line[i + 2:]
+                        line = line[:astericks] + "(b)" + line[astericks + 2:]
+                        pair1 = 0
+                        pair2 = 0
+                        space = 0
+            i = i + 1
+        processed.append(line)
+        
+    lines = processed
+    processed = []
+                    
     # Italic
     for line in lines:
         astericks = -1
@@ -34,9 +65,9 @@ def parse_markdown(markdown_text):
         processed.append(line)
 
     lines = processed
+    processed = []
     
     # Inline Code
-    processed = []
     for line in lines:
         tick = -1
         space = 0
