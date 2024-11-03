@@ -7,16 +7,15 @@ markdown_rules = {
     "heading3": (r"^### (.+)$", "(h3)\\1"),
     "heading2": (r"^## (.+)$", "(h2)\\1"),
     "heading1": (r"^# (.+)$", "(h1)\\1"),
-    "inline_code": (r"\`(.+)\`", "(ic)\\1(ic)"),
     "unordered_list": (r"^\ - (.+)$", "(ul)\\1(ul)"),
     "newline": (r"\n", "(newline)")
 }
 
 def parse_markdown(markdown_text):
-    # Italic
     lines = markdown_text.splitlines()
     processed = []
     
+    # Italic
     for line in lines:
         astericks = -1
         space = 0
@@ -34,6 +33,27 @@ def parse_markdown(markdown_text):
             i = i + 1
         processed.append(line)
 
+    lines = processed
+    
+    # Inline Code
+    processed = []
+    for line in lines:
+        tick = -1
+        space = 0
+        i = 0
+        while i < len(line):
+            if line[i] == "`" and space == 0:
+                tick = i
+            elif line[i] != "`" and tick >= 0 and space == 0:
+                space = 1
+            elif line[i] == "`" and space == 1:
+                line = line[:i] + "(ic)" + line[i + 1:]
+                line = line[:tick] + "(ic)" + line[tick + 1:]
+                tick = -1
+                space = 0
+            i = i + 1
+        processed.append(line)
+    
     markdown_text = "\n".join(processed)
     
     for rule_name, (pattern, replacement) in markdown_rules.items():
