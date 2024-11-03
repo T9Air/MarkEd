@@ -19,14 +19,18 @@ def parse_markdown(markdown_text):
     
     for line in lines:
         astericks = -1
+        space = 0
         i = 0
         while i < len(line):
-            if line[i] == "*" and astericks == -1:
+            if line[i] == "*" and space == 0:
                 astericks = i
-            elif line[i] == "*" and astericks >= 0:
+            elif line[i] != "*" and astericks >= 0 and space == 0:
+                space = 1
+            elif line[i] == "*" and space == 1:
                 line = line[:i] + "(i)" + line[i + 1:]
                 line = line[:astericks] + "(i)" + line[astericks + 1:]
                 astericks = -1
+                space = 0
             i = i + 1
         processed.append(line)
 
