@@ -10,7 +10,7 @@ markdown_rules = {
     "bold": (r"(?<!\\)\*\*(?=[^\*])(.+?)(?<!\\)\*\*", "(b)\\1(b)"),
     "italic": (r"(?<!\\)\*(.+?)(?<!\\)\*", "(i)\\1(i)"),
     "inline_code": (r"(?<!\\)\`(.+?)(?<!\\)\`", "(ic)\\1(ic)"),
-    "unordered_list": (r"^\ - (.+)$", "(ul)\\1(ul)"),
+    "unordered_list": (r"^\ - (.+)$", "(ul)\\1"),
     "escaped_asterisk": (r"\\\*", "*"),
     "escaped_backtick": (r"\\`", "`"),
     # "escaped_backslash": (r"\\\\", '\\'),
