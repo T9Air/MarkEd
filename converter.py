@@ -52,11 +52,26 @@ def parsed_to_readable(parsed_text, textbox):
             start, end = match.span()
             italic_indices.append((start, end))
             italic_characters.extend([i for i in range(start + 1, end + 1)])
+            
+        # Italic
+        inlinecode_indices = []
+        inlinecode_characters = []
+        matches = re.finditer(r"(\(ic\))(.+)(\(ic\))", line)
+
+        for match in matches:
+            start, end = match.span()
+            inlinecode_indices.append((start, end))
+            inlinecode_characters.extend([i for i in range(start + 1, end + 1)])
 
         # Adding characters to textbox
         char_num = 0 # Create a variable to store what number character on the line it is up to
         for char in line:
             char_num = char_num + 1
+            
+            if char_num in inlinecode_characters:
+                backgrounds = "lightgray"
+            else:
+                backgrounds = "white"
             
             if char_num in bold_characters or heading == "h":
                 bold = ",bold"
@@ -69,16 +84,16 @@ def parsed_to_readable(parsed_text, textbox):
                 italic = ","
             
             # Tag name is a combination of all changes
-            tag_name = heading + str(font_size) + bold + italic
+            tag_name = heading + str(font_size) + bold + italic + "," + backgrounds
             
             if bold == ",bold" and italic == ",italic":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"))
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"), background = backgrounds)
             elif bold == ",bold":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"))
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"), background = backgrounds)
             elif italic == ",italic":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"))
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"), background = backgrounds)
             else:
-                textbox.tag_configure(tag_name, font=("Arial", font_size))
+                textbox.tag_configure(tag_name, font=("Arial", font_size), background = backgrounds)
             
             textbox.insert(tk.END, char, tag_name)
 
