@@ -10,6 +10,7 @@ from converter import parsed_to_readable
 root = tk.Tk()
 
 root.title("MarkEd")
+root.state('zoomed') 
 
 root.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=1)
@@ -21,14 +22,23 @@ top_frame.grid(row=0, column=0, sticky="nsw", padx=5, pady=5)
 top_frame.columnconfigure(0, weight=1)
 top_frame.columnconfigure(1, weight=1)
 
-def save():
-    save_file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")]) 
+file_path = ""
 
-    if save_file_path:
-        with open(save_file_path, "w") as file:
+def save():
+    global file_path
+    if file_path == "":
+        save_file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")]) 
+
+        if save_file_path:
+            with open(save_file_path, "w") as file:
+                file.write(markdown_box.get("1.0", tk.END))
+            file_path = save_file_path
+    else:
+        with open(file_path, "w") as file:
             file.write(markdown_box.get("1.0", tk.END))
 
 def open_file():
+    global file_path
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
     
     if open_file_path:
@@ -40,6 +50,7 @@ def open_file():
             parsed_text = parse_markdown(text)
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
+        file_path = open_file_path
 
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file)
 open_btn.grid(row=0, column=0, sticky="w")
@@ -48,7 +59,6 @@ spacer1 = tk.Label(top_frame, width=1)
 spacer1.grid(row=0, column=1, sticky="w")
 
 save_btn = tk.Button(top_frame, text="Save file", height=1, command=save)
-
 save_btn.grid(row=0, column=2, sticky="w")
 
 # Markdown frame - markdown text
@@ -70,7 +80,7 @@ def update_text(event=None):
         realtext_box.config(state="disabled")
     root.after(1, delayed_update)
 
-markdown_box = tk.Text(markdown_frame, height=15, width=53, yscrollcommand=True)
+markdown_box = tk.Text(markdown_frame, height=30, width=90, yscrollcommand=True)
 markdown_box.grid(row=0, column=0, sticky="nsew")
 markdown_box.bind("<KeyPress>", update_text)
 
@@ -81,7 +91,7 @@ realtext_frame.grid(row=1, column=1, padx=5, pady=5)
 realtext_frame.columnconfigure(0, weight=1)
 realtext_frame.rowconfigure(0, weight=1)
 
-realtext_box = tk.Text(realtext_frame, height=15, width=53, yscrollcommand=True)
+realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True)
 realtext_box.grid(row=0, column=0, sticky="nsew")
 
 root.mainloop()
