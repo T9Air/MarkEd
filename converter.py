@@ -36,7 +36,7 @@ def parsed_to_readable(parsed_text, textbox):
         # Bold
         bold_indices = []
         bold_characters = []
-        matches = re.finditer(r"(\(b\))(.+)(\(b\))", line)
+        matches = re.finditer(r"(\(b\))(.+?)(\(b\))", line)
         
         for match in matches:
             start, end = match.span()
@@ -46,7 +46,7 @@ def parsed_to_readable(parsed_text, textbox):
         # Italic
         italic_indices = []
         italic_characters = []
-        matches = re.finditer(r"(\(i\))(.+)(\(i\))", line)
+        matches = re.finditer(r"(\(i\))(.+?)(\(i\))", line)
         
         for match in matches:
             start, end = match.span()
@@ -56,7 +56,7 @@ def parsed_to_readable(parsed_text, textbox):
         # Italic
         inlinecode_indices = []
         inlinecode_characters = []
-        matches = re.finditer(r"(\(ic\))(.+)(\(ic\))", line)
+        matches = re.finditer(r"(\(ic\))(.+?)(\(ic\))", line)
 
         for match in matches:
             start, end = match.span()
