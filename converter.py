@@ -16,13 +16,13 @@ def parsed_to_readable(parsed_text, textbox):
         
         if heading_level:
             font_size = {
-                1: 18,
-                2: 14,
-                3: 12,
-                4: 10,
-                5: 9,
-                6: 8
-            }.get(heading_level, 10)
+                1: 22,
+                2: 18,
+                3: 16,
+                4: 14,
+                5: 12,
+                6: 11
+            }.get(heading_level, 14)
             line = line[4:]
         
         if heading_level:
@@ -30,7 +30,7 @@ def parsed_to_readable(parsed_text, textbox):
             bold = "bold"
         else:
             heading = "r"
-            font_size = 10
+            font_size = 14
             bold = ""
         
         # Bold
@@ -38,10 +38,20 @@ def parsed_to_readable(parsed_text, textbox):
         bold_characters = []
         matches = re.finditer(r"(\(b\))(.+?)(\(b\))", line)
         
+        end_subtract = 6
+        start_subtract = 0
+        sr = 0
+        er = 0
+        
         for match in matches:
             start, end = match.span()
-            bold_indices.append((start, end))
-            bold_characters.extend([i for i in range(start + 1, end + 1)])
+            bold_indices.append((start - start_subtract, end - end_subtract))
+            bold_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
+            start_subtract = start_subtract + 6
+            end_subtract = end_subtract + 6
+            line = line[:start - sr] + line[start + 3 - sr:end - 3 - er] + line[end - er:]
+            er += 6
+            sr +=6
             
         # Italic
         italic_indices = []
@@ -53,7 +63,7 @@ def parsed_to_readable(parsed_text, textbox):
             italic_indices.append((start, end))
             italic_characters.extend([i for i in range(start + 1, end + 1)])
             
-        # Italic
+        # Inline Code Block
         inlinecode_indices = []
         inlinecode_characters = []
         matches = re.finditer(r"(\(ic\))(.+?)(\(ic\))", line)
@@ -69,7 +79,7 @@ def parsed_to_readable(parsed_text, textbox):
             char_num = char_num + 1
             
             if char_num in inlinecode_characters:
-                backgrounds = "lightgray"
+                backgrounds = "gray40"
             else:
                 backgrounds = "gray30"
             
