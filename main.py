@@ -10,7 +10,6 @@ from converter import parsed_to_readable
 root = tk.Tk()
 
 root.title("MarkEd")
-#root.state('zoomed')
 root.configure(bg='gray15')
 
 root.columnconfigure(0, weight=1)
@@ -19,9 +18,6 @@ root.columnconfigure(1, weight=1)
 # Top frame - save, open file, etc.
 top_frame = tk.Frame(root, height=1, bg='gray15')
 top_frame.pack(fill='x', padx=10, pady=10)
-
-top_frame.columnconfigure(0, weight=1)
-top_frame.columnconfigure(1, weight=1)
 
 file_path = ""
 
@@ -63,8 +59,6 @@ save_btn.grid(row=0, column=1, padx=5, sticky='w')
 markdown_frame = tk.Frame(root, bg='red')
 markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
-markdown_frame.columnconfigure(0, weight=1)
-markdown_frame.rowconfigure(0, weight=1)
 
 def update_text(event=None):
     def delayed_update():
