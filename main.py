@@ -13,15 +13,10 @@ root.title("MarkEd")
 #root.state('zoomed')
 root.configure(bg='gray15')
 
-root.columnconfigure(0, weight=1)
-root.columnconfigure(1, weight=1)
-
 # Top frame - save, open file, etc.
 top_frame = tk.Frame(root, height=1, bg='gray15')
 top_frame.pack(fill='x', padx=10, pady=10)
 
-top_frame.columnconfigure(0, weight=1)
-top_frame.columnconfigure(1, weight=1)
 
 file_path = ""
 
@@ -60,11 +55,9 @@ save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief
 save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
 # Markdown frame - markdown text
-markdown_frame = tk.Frame(root, bg='red')
+markdown_frame = tk.Frame(root, bg='gray30')
 markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
-markdown_frame.columnconfigure(0, weight=1)
-markdown_frame.rowconfigure(0, weight=1)
 
 def update_text(event=None):
     def delayed_update():
@@ -78,18 +71,16 @@ def update_text(event=None):
         realtext_box.config(state="disabled")
     root.after(1, delayed_update)
 
-markdown_box = tk.Text(markdown_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
-markdown_box.grid(row=0, column=0, sticky="nsew")
+markdown_box = tk.Text(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
+markdown_box.pack(fill='both', expand=True)
 markdown_box.bind("<KeyPress>", update_text)
 
 # Realtext frame - converted text
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-realtext_frame.columnconfigure(0, weight=1)
-realtext_frame.rowconfigure(0, weight=1)
 
 realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
-realtext_box.grid(row=0, column=0, sticky="nsew")
+realtext_box.pack(fill='both', expand=True)
 
 root.mainloop()
