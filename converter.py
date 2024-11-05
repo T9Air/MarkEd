@@ -51,8 +51,9 @@ def parsed_to_readable(parsed_text, textbox):
             end_subtract = end_subtract + 6
             line = line[:start - sr] + line[start + 3 - sr:end - 3 - er] + line[end - er:]
             er += 6
-            sr +=6
-            
+            sr += 6
+        
+        # TODO: Get the italics working            
         # Italic
         italic_indices = []
         italic_characters = []
