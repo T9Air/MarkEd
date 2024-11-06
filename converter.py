@@ -53,8 +53,7 @@ def parsed_to_readable(parsed_text, textbox):
             line = line[:start - sr] + line[start + 3 - sr:end - 3 - er] + line[end - er:]
             er += 6
             sr += 6
-        
-        # TODO: Get the italics working            
+          
         # Italic
         italic_indices = []
         italic_characters = []
@@ -80,18 +79,37 @@ def parsed_to_readable(parsed_text, textbox):
             line = line[:start - sr] + line[start + 3 - sr:end - 3 - er] + line[end - er:]
             er += 6
             sr += 6
-            
-
-            
+                        
         # Inline Code Block
         inlinecode_indices = []
         inlinecode_characters = []
         matches = re.finditer(r"(\(ic\))(.+?)(\(ic\))", line)
 
+        end_subtract = 8
+        start_subtract = 0
+        sr = 0
+        er = 0
+
         for match in matches:
             start, end = match.span()
-            inlinecode_indices.append((start, end))
-            inlinecode_characters.extend([i for i in range(start + 1, end + 1)])
+            inlinecode_indices.append(start - start_subtract)
+            inlinecode_indices.append(end - end_subtract)
+            for i in range(len(bold_characters)):
+                if bold_characters[i - 1] > start - start_subtract:
+                    bold_characters[i - 1] -= 4
+                if bold_characters[i - 1] > end - end_subtract:
+                    bold_characters[i - 1] -= 4
+            for i in range(len(italic_characters)):
+                if italic_characters[i - 1] > start - start_subtract:
+                    italic_characters[i - 1] -= 4
+                if italic_characters[i - 1] > end - end_subtract:
+                    italic_characters[i - 1] -= 4
+            inlinecode_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
+            start_subtract = start_subtract + 8
+            end_subtract = end_subtract + 8
+            line = line[:start - sr] + line[start + 4 - sr:end - 4 - er] + line[end - er:]
+            er += 8
+            sr += 8
 
         # Adding characters to textbox
         char_num = 0 # Create a variable to store what number character on the line it is up to
