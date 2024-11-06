@@ -45,7 +45,8 @@ def parsed_to_readable(parsed_text, textbox):
         
         for match in matches:
             start, end = match.span()
-            bold_indices.append((start - start_subtract, end - end_subtract))
+            bold_indices.append(start - start_subtract)
+            bold_indices.append(end - end_subtract)
             bold_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -59,10 +60,28 @@ def parsed_to_readable(parsed_text, textbox):
         italic_characters = []
         matches = re.finditer(r"(\(i\))(.+?)(\(i\))", line)
         
+        end_subtract = 6
+        start_subtract = 0
+        sr = 0
+        er = 0
+        
         for match in matches:
             start, end = match.span()
-            italic_indices.append((start, end))
-            italic_characters.extend([i for i in range(start + 1, end + 1)])
+            italic_indices.append(start - start_subtract)
+            italic_indices.append(end - end_subtract)
+            for i in range(len(bold_characters)):
+                if bold_characters[i - 1] > start - start_subtract:
+                    bold_characters[i - 1] -= 3
+                if bold_characters[i - 1] > end - end_subtract:
+                    bold_characters[i - 1] -= 3
+            italic_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
+            start_subtract = start_subtract + 6
+            end_subtract = end_subtract + 6
+            line = line[:start - sr] + line[start + 3 - sr:end - 3 - er] + line[end - er:]
+            er += 6
+            sr += 6
+            
+
             
         # Inline Code Block
         inlinecode_indices = []
