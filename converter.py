@@ -116,11 +116,6 @@ def parsed_to_readable(parsed_text, textbox):
         for char in line:
             char_num = char_num + 1
             
-            if char_num in inlinecode_characters:
-                backgrounds = "gray40"
-            else:
-                backgrounds = "gray30"
-            
             if char_num in bold_characters or heading == "h":
                 bold = ",bold"
             else:
@@ -130,6 +125,16 @@ def parsed_to_readable(parsed_text, textbox):
                 italic = ",italic"
             else:
                 italic = ","
+            
+            if char_num in inlinecode_characters:
+                backgrounds = "gray40"
+                if heading == "r":
+                    bold = ","
+                else:
+                    bold = ",bold"
+                italic = ","
+            else:
+                backgrounds = "gray30"
             
             # Tag name is a combination of all changes
             tag_name = heading + str(font_size) + bold + italic + "," + backgrounds
