@@ -127,4 +127,6 @@ markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 
+markdown_box.linenumbers.redraw()
+
 root.mainloop()
