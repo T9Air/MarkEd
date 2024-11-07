@@ -104,25 +104,62 @@ class TextLineNumbers(tk.Canvas):
             i = self.textwidget.index("%s+1line" % i)
 
 class new_tab:
-    def __init__(self):
+    def __init__(self, tab_manager):
         global tabsframe
-        self.tab_button = tk.Button(tabsframe, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=lambda: self.switch_tab_to_self())
+        self.tab_manager = tab_manager
+
+        self.tab_frame = tk.Frame(tabsframe)
+        self.tab_frame.pack(fill='x', expand=True, side='left')
+
+        self.tab_button = tk.Button(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=lambda: self.switch_tab_to_self())
         self.tab_button.pack(fill='x', expand=True, side='left')
 
-        #self.switch_tab_to_self()
+        self.tab_delbutton = tk.Button(self.tab_frame, text='🗑️', bg='gray15', fg='white', relief='flat', overrelief='flat', command=lambda: self.delete_tab())
+        self.tab_delbutton.pack(side='right')
+
+        self.tab_manager.register_tab(self)
+
+        self.switch_tab_to_self()
 
     def switch_tab_to_self(self):
         print(f'Tab Switched to {self}')
-        
+        self.tab_manager.switch_to_tab(self)
+
+    def activate(self):
         self.tab_button.config(bg='gray30')
-        
+        self.tab_delbutton.config(bg='gray30')
+
+    def deactivate(self):
+        self.tab_button.config(bg='gray15')
+        self.tab_delbutton.config(bg='gray15')
+    
+    def delete_tab(self):
+        self.tab_frame.destroy()
+        self.tab_manager.unregister_tab(self)
+
+class TabManager:
+    def __init__(self):
+        self.tabs = []
+
+    def register_tab(self, tab):
+        self.tabs.append(tab)
+    def unregister_tab(self, tab):
+        if tab in self.tabs:
+            self.tabs.remove(tab)
+
+    def switch_to_tab(self, tab):
+        for t in self.tabs:
+            t.deactivate()
+        tab.activate()
+
+
 
 
 global tabsframe
 tabsframe = tk.Frame(markdown_frame)
 tabsframe.pack(side='top', fill='x')
 
-add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab())
+add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
 add_new_tabB.pack(fill='x', expand=True, side='left')
 
 markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
@@ -151,7 +188,9 @@ markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 
 markdown_box.linenumbers.redraw()
 
-new_tab()
+global thetab_manager
+thetab_manager = TabManager()
+new_tab(thetab_manager)
 
 
 
