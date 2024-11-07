@@ -36,8 +36,15 @@ def parsed_to_readable(parsed_text, textbox):
         # Unordered list
         textbox.tag_configure("bullet", font=("Arial", 14, "bold"))
         if line.startswith("(ul)"):
-            textbox.insert(tk.END," " + u"\u2022" + " ", "bullet")
+            textbox.insert(tk.END, " " + u"\u2022" + " ", "bullet")
             line = line[4:]
+        
+        # Blockquote
+        blockquote_tag = "blockquote" + str(font_size)
+        textbox.tag_configure(blockquote_tag, font=("Arial", font_size), background = "gray20")
+        if line.startswith("(bq)"):
+            textbox.insert(tk.END, " ", blockquote_tag)
+            line = " " + line[5:]
         
         # Bold
         bold_indices = []

@@ -11,6 +11,7 @@ markdown_rules = {
     "italic": (r"(?<!\\)\*(?=[^\*])(.+?)(?=[^\*])(?<!\\)\*", "(i)\\1(i)"),
     "inline_code": (r"(?<!\\)\`(.+?)(?<!\\)\`", "(ic)\\1(ic)"),
     "unordered_list": (r"^\ - (.+)$", "(ul)\\1"),
+    "blockquote": (r"^> (.+)$", "(bq)\\1"),
     "escaped_asterisk": (r"\\\*", "*"),
     "escaped_backtick": (r"\\`", "`"),
     # "escaped_backslash": (r"\\\\", '\\'),
