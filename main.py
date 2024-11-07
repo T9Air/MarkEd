@@ -109,10 +109,12 @@ class new_tab:
         self.tab_button = tk.Button(tabsframe, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=lambda: self.switch_tab_to_self())
         self.tab_button.pack(fill='x', expand=True, side='left')
 
+        #self.switch_tab_to_self()
+
     def switch_tab_to_self(self):
         print(f'Tab Switched to {self}')
         
-        
+        self.tab_button.config(bg='gray30')
         
 
 
