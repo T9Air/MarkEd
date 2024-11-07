@@ -138,14 +138,14 @@ def parsed_to_readable(parsed_text, textbox):
                 italic = ","
             
             if char_num in inlinecode_characters:
-                backgrounds = "gray40"
+                backgrounds = "lightgray"
                 if heading == "r":
                     bold = ","
                 else:
                     bold = ",bold"
                 italic = ","
             else:
-                backgrounds = "gray30"
+                backgrounds = "white"
             
             # Tag name is a combination of all changes
             tag_name = heading + str(font_size) + bold + italic + "," + backgrounds
