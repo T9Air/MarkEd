@@ -44,7 +44,7 @@ def parsed_to_readable(parsed_text, textbox):
         textbox.tag_configure(blockquote_tag, font=("Arial", font_size), background = "gray20")
         if line.startswith("(bq)"):
             textbox.insert(tk.END, " ", blockquote_tag)
-            line = " " + line[5:]
+            line = " " + line[4:]
         
         # Bold
         bold_indices = []
