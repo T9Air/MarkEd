@@ -103,10 +103,30 @@ class TextLineNumbers(tk.Canvas):
             self.create_text(2, y, anchor="nw", text=linenum, fill='white')
             i = self.textwidget.index("%s+1line" % i)
 
+class new_tab:
+    def __init__(self):
+        global tabsframe
+        self.tab_button = tk.Button(tabsframe, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=lambda: self.switch_tab_to_self())
+        self.tab_button.pack(fill='x', expand=True, side='left')
+
+    def switch_tab_to_self(self):
+        print(f'Tab Switched to {self}')
+        
+        
+        
+
+
+global tabsframe
+tabsframe = tk.Frame(markdown_frame)
+tabsframe.pack(side='top', fill='x')
+
+add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab())
+add_new_tabB.pack(fill='x', expand=True, side='left')
 
 markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
 markdown_box.pack(side='right', fill='both', expand=True)
 markdown_box.bind("<KeyPress>", update_text)
+
 
 linenumbers = TextLineNumbers(markdown_frame, width=30)
 linenumbers.attach(markdown_box)
@@ -128,5 +148,10 @@ markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 
 markdown_box.linenumbers.redraw()
+
+new_tab()
+
+
+
 
 root.mainloop()
