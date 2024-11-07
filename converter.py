@@ -122,6 +122,11 @@ def parsed_to_readable(parsed_text, textbox):
         for char in line:
             char_num = char_num + 1
             
+            if char_num in inlinecode_characters:
+                backgrounds = "lightgray"
+            else:
+                backgrounds = "white"
+            
             if char_num in bold_characters or heading == "h":
                 bold = ",bold"
             else:
