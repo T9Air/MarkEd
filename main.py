@@ -122,7 +122,6 @@ class new_tab:
         self.switch_tab_to_self()
 
     def switch_tab_to_self(self):
-        print(f'Tab Switched to {self}')
         self.tab_manager.switch_to_tab(self)
 
     def activate(self):
@@ -164,7 +163,7 @@ add_new_tabB.pack(fill='x', expand=True, side='left')
 
 markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
 markdown_box.pack(side='right', fill='both', expand=True)
-markdown_box.bind("<KeyPress>", update_text)
+markdown_box.bind("<KeyPress>", update_text, add="+")
 
 
 linenumbers = TextLineNumbers(markdown_frame, width=30)
@@ -181,7 +180,7 @@ realtext_box.pack(fill='both', expand=True)
 
 
 markdown_box.attach(linenumbers)
-markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers)
+markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
 markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
