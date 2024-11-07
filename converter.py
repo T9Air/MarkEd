@@ -33,6 +33,12 @@ def parsed_to_readable(parsed_text, textbox):
             font_size = 14
             bold = ""
         
+        # Unordered list
+        textbox.tag_configure("bullet", font=("Arial", 14, "bold"))
+        if line.startswith("(ul)"):
+            textbox.insert(tk.END," " + u"\u2022" + " ", "bullet")
+            line = line[4:]
+        
         # Bold
         bold_indices = []
         bold_characters = []
