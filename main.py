@@ -105,7 +105,11 @@ class TextLineNumbers(tk.Canvas):
 
 class new_tab:
     def __init__(self, tab_manager):
-        global tabsframe
+        global tabsframe, markdown_box
+        self.textoftab = ''
+        markdown_box.bind('<KeyRelease>', self.update_var, add='+')
+
+
         self.tab_manager = tab_manager
 
         self.tab_frame = tk.Frame(tabsframe)
@@ -114,15 +118,20 @@ class new_tab:
         self.tab_button = tk.Button(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=lambda: self.switch_tab_to_self())
         self.tab_button.pack(fill='x', expand=True, side='left')
 
-        self.tab_delbutton = tk.Button(self.tab_frame, text='🗑️', bg='gray15', fg='white', relief='flat', overrelief='flat', command=lambda: self.delete_tab())
+        self.tab_delbutton = tk.Button(self.tab_frame, text='❌', bg='gray15', fg='white', relief='flat', overrelief='flat', command=lambda: self.delete_tab())
         self.tab_delbutton.pack(side='right')
 
         self.tab_manager.register_tab(self)
+
 
         self.switch_tab_to_self()
 
     def switch_tab_to_self(self):
         self.tab_manager.switch_to_tab(self)
+        global markdown_box
+        markdown_box.delete(1.0, tk.END)
+        root.update()
+        markdown_box.insert(1.0, self.textoftab)
 
     def activate(self):
         self.tab_button.config(bg='gray30')
@@ -135,6 +144,11 @@ class new_tab:
     def delete_tab(self):
         self.tab_frame.destroy()
         self.tab_manager.unregister_tab(self)
+
+    def update_var(self, e):
+        global markdown_box
+        self.textoftab = markdown_box.get(1.0, tk.END)
+        print(self.textoftab)
 
 class TabManager:
     def __init__(self):
@@ -181,7 +195,7 @@ realtext_box.pack(fill='both', expand=True)
 
 markdown_box.attach(linenumbers)
 markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
-markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers)
+markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers, add='+')
 markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 
