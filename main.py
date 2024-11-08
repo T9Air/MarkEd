@@ -132,6 +132,7 @@ class new_tab:
         root.update()
         markdown_box.insert(1.0, self.textoftab)
         markdown_box.bind('<KeyRelease>', self.update_var, add='+')
+        update_text()
 
     def activate(self):
         self.tab_button.config(bg='gray30')
