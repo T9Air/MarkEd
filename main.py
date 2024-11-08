@@ -130,6 +130,7 @@ class new_tab:
         root.update()
         markdown_box.insert(1.0, self.textoftab)
         markdown_box.bind('<KeyRelease>', self.update_var, add='+')
+        markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers, add='+')
         update_text()
 
     def activate(self):
@@ -196,7 +197,6 @@ realtext_box.pack(fill='both', expand=True)
 
 markdown_box.attach(linenumbers)
 markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
-markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers, add='+')
 markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 
