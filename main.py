@@ -103,35 +103,35 @@ class TextLineNumbers(tk.Canvas):
             self.create_text(2, y, anchor="nw", text=linenum, fill='white')
             i = self.textwidget.index("%s+1line" % i)
 
+import tkinter as tk
+
 class new_tab:
     def __init__(self, tab_manager):
-        global tabsframe, markdown_box
+        global tabsframe, markdown_box, root
         self.textoftab = ''
-        markdown_box.bind('<KeyRelease>', self.update_var, add='+')
-
-
         self.tab_manager = tab_manager
 
         self.tab_frame = tk.Frame(tabsframe)
         self.tab_frame.pack(fill='x', expand=True, side='left')
 
-        self.tab_button = tk.Button(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=lambda: self.switch_tab_to_self())
+        self.tab_button = tk.Button(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=self.switch_tab_to_self)
         self.tab_button.pack(fill='x', expand=True, side='left')
 
-        self.tab_delbutton = tk.Button(self.tab_frame, text='❌', bg='gray15', fg='white', relief='flat', overrelief='flat', command=lambda: self.delete_tab())
+        self.tab_delbutton = tk.Button(self.tab_frame, text='❌', bg='gray15', fg='white', relief='flat', overrelief='flat', command=self.delete_tab)
         self.tab_delbutton.pack(side='right')
 
         self.tab_manager.register_tab(self)
-
 
         self.switch_tab_to_self()
 
     def switch_tab_to_self(self):
         self.tab_manager.switch_to_tab(self)
         global markdown_box
+        markdown_box.unbind('<KeyRelease>')
         markdown_box.delete(1.0, tk.END)
         root.update()
         markdown_box.insert(1.0, self.textoftab)
+        markdown_box.bind('<KeyRelease>', self.update_var, add='+')
 
     def activate(self):
         self.tab_button.config(bg='gray30')
@@ -156,6 +156,7 @@ class TabManager:
 
     def register_tab(self, tab):
         self.tabs.append(tab)
+
     def unregister_tab(self, tab):
         if tab in self.tabs:
             self.tabs.remove(tab)
@@ -164,6 +165,7 @@ class TabManager:
         for t in self.tabs:
             t.deactivate()
         tab.activate()
+
 
 
 
