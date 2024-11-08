@@ -103,8 +103,6 @@ class TextLineNumbers(tk.Canvas):
             self.create_text(2, y, anchor="nw", text=linenum, fill='white')
             i = self.textwidget.index("%s+1line" % i)
 
-import tkinter as tk
-
 class new_tab:
     def __init__(self, tab_manager):
         global tabsframe, markdown_box, root
