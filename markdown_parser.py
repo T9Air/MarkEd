@@ -10,9 +10,11 @@ markdown_rules = {
     "bold": (r"(?<!\\)\*\*(?=[^\*])(.+?)(?<!\\)\*\*", "(b)\\1(b)"),
     "italic": (r"(?<!\\)\*(.+?)(?<!\\)\*", "(i)\\1(i)"),
     "inline_code": (r"(?<!\\)\`(.+?)(?<!\\)\`", "(ic)\\1(ic)"),
-    "unordered_list": (r"^\ - (.+)$", "(ul)\\1"),
     "link": (r"(?<!\\)\[(.+?)\]\((.+?)\)", "(l)(name)\\1(address)\\2(l)"),
     "blockquote": (r"^> (.+)$", "(bq)\\1"),
+    "checked_box": (r"\ - \[ \] (.+)$", "(checked)\\1"),
+    "unchecked_box": (r"\ - \[x\] (.+)$", "(unchecked)\\1"),
+    "unordered_list": (r"^\ - (.+)$", "(ul)\\1"),
     "newline": (r"\n", "(newline)")
 }
 

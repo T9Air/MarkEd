@@ -45,6 +45,18 @@ def parsed_to_readable(parsed_text, textbox):
         if line.startswith("(bq)"):
             textbox.insert(tk.END, " ", blockquote_tag)
             line = " " + line[4:]
+            
+        # Unchecked box
+        textbox.tag_configure("unchecked", font=("Arial", 14))
+        if line.startswith("(unchecked)"):
+            textbox.insert(tk.END, u"\u2611" + " ", "unchecked")
+            line = line[11:]
+        
+        # Checked box
+        textbox.tag_configure("checked", font=("Arial", 14))
+        if line.startswith("(checked)"):
+            textbox.insert(tk.END, u"\u2610" + " ", "unchecked")
+            line = line[9:]
         
         # Links
         # NOTE: Links do not actually link to any website yet
