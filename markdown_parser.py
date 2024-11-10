@@ -11,6 +11,7 @@ markdown_rules = {
     "italic": (r"(?<!\\)\*(.+?)(?<!\\)\*", "(i)\\1(i)"),
     "inline_code": (r"(?<!\\)\`(.+?)(?<!\\)\`", "(ic)\\1(ic)"),
     "unordered_list": (r"^\ - (.+)$", "(ul)\\1"),
+    "link": (r"(?<!\\)\[(.+?)\]\((.+?)\)", "(l)(name)\\1(address)\\2(l)"),
     "blockquote": (r"^> (.+)$", "(bq)\\1"),
     "newline": (r"\n", "(newline)")
 }

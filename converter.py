@@ -46,6 +46,22 @@ def parsed_to_readable(parsed_text, textbox):
             textbox.insert(tk.END, " ", blockquote_tag)
             line = " " + line[4:]
         
+        # Links
+        # NOTE: Links do not actually link to any website yet
+        link_addresses = []
+        link_characters = []
+        
+        while True:
+            match = re.search(r"(\(l\))(\(name\))(.+?)(\(address\))(.+?)(\(l\))", line)
+            if not match:
+                break
+            link_addresses.append(match.group(5))
+            start, end = match.span()
+            name = match.group(3)
+            line = line[:start] + name + line[end:]
+            start, end = match.span(3)
+            link_characters.extend(i for i in range(start - 8, end - 8))
+        
         # Bold
         bold_indices = []
         bold_characters = []
@@ -60,6 +76,11 @@ def parsed_to_readable(parsed_text, textbox):
             start, end = match.span()
             bold_indices.append(start - start_subtract)
             bold_indices.append(end - end_subtract)
+            for i in range(len(link_characters)):
+                if link_characters[i - 1] > start - start_subtract:
+                    link_characters[i - 1] -= 3
+                if link_characters[i - 1] > end - end_subtract:
+                    link_characters[i - 1] -= 3
             bold_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -86,6 +107,11 @@ def parsed_to_readable(parsed_text, textbox):
                     bold_characters[i - 1] -= 3
                 if bold_characters[i - 1] > end - end_subtract:
                     bold_characters[i - 1] -= 3
+            for i in range(len(link_characters)):
+                if link_characters[i - 1] > start - start_subtract:
+                    link_characters[i - 1] -= 3
+                if link_characters[i - 1] > end - end_subtract:
+                    link_characters[i - 1] -= 3
             italic_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -117,6 +143,11 @@ def parsed_to_readable(parsed_text, textbox):
                     italic_characters[i - 1] -= 4
                 if italic_characters[i - 1] > end - end_subtract:
                     italic_characters[i - 1] -= 4
+            for i in range(len(link_characters)):
+                if link_characters[i - 1] > start - start_subtract:
+                    link_characters[i - 1] -= 4
+                if link_characters[i - 1] > end - end_subtract:
+                    link_characters[i - 1] -= 4
             inlinecode_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 8
             end_subtract = end_subtract + 8
@@ -154,17 +185,26 @@ def parsed_to_readable(parsed_text, textbox):
             else:
                 backgrounds = "white"
             
+            if char_num in link_characters:
+                foregrounds = "blue"
+                underlines = True
+                tag = "true"
+            else:
+                foregrounds = "black"
+                underlines = False
+                tag = "false"
+            
             # Tag name is a combination of all changes
-            tag_name = heading + str(font_size) + bold + italic + "," + backgrounds
+            tag_name = heading + str(font_size) + bold + italic + "," + backgrounds + "," + foregrounds + "," + tag
             
             if bold == ",bold" and italic == ",italic":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"), background = backgrounds)
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold", "italic"), background = backgrounds, foreground = foregrounds, underline = underlines)
             elif bold == ",bold":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"), background = backgrounds)
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "bold"), background = backgrounds, foreground = foregrounds, underline = underlines)
             elif italic == ",italic":
-                textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"), background = backgrounds)
+                textbox.tag_configure(tag_name, font=("Arial", font_size, "italic"), background = backgrounds, foreground = foregrounds, underline = underlines)
             else:
-                textbox.tag_configure(tag_name, font=("Arial", font_size), background = backgrounds)
+                textbox.tag_configure(tag_name, font=("Arial", font_size), background = backgrounds, foreground = foregrounds, underline = underlines)
             
             textbox.insert(tk.END, char, tag_name)
 
