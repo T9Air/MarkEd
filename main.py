@@ -119,6 +119,7 @@ class new_tab:
         self.tab_delbutton.pack(side='right')
 
         self.tab_manager.register_tab(self)
+        self.update_delete_buttons()
 
         self.switch_tab_to_self()
 
@@ -144,15 +145,27 @@ class new_tab:
     def delete_tab(self):
         self.tab_frame.destroy()
         self.tab_manager.unregister_tab(self)
+        self.update_delete_buttons()
+        if self.tab_manager.tabs:
+            self.tab_manager.tabs[0].switch_tab_to_self()
 
     def update_var(self, e):
         global markdown_box
         self.textoftab = markdown_box.get(1.0, tk.END)
-        print(self.textoftab)
+
+    def update_delete_buttons(self):
+        for tab in self.tab_manager.tabs:
+            if len(self.tab_manager.tabs) > 1:
+                tab.tab_delbutton.config(state='normal')
+            else:
+                tab.tab_delbutton.config(state='disabled')
 
 class TabManager:
     def __init__(self):
         self.tabs = []
+    
+    def get_numotabs(self):
+        return len(self.tabs)
 
     def register_tab(self, tab):
         self.tabs.append(tab)
