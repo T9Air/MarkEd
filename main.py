@@ -38,6 +38,7 @@ def open_file():
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
     
     if open_file_path:
+        new_tab(thetab_manager)
         with open(open_file_path, "r") as file:
             text = file.read()
             markdown_box.delete(1.0, tk.END)
