@@ -34,6 +34,13 @@ def save():
         with open(file_path, "w") as file:
             file.write(markdown_box.get("1.0", tk.END))
 
+    current_tab = thetab_manager.get_current_tab()
+    if current_tab:
+        print(f"Renaming tab to: {os.path.basename(file_path)}")
+        current_tab.rename(renameto=os.path.basename(file_path))
+    else:
+        print("No current tab found.")
+
 def open_file():
     global file_path
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
@@ -128,6 +135,7 @@ class new_tab:
         self.switch_tab_to_self()
     
     def rename(self, renameto):
+        print(f"Renaming button to: {renameto}")
         self.tab_button.config(text=renameto)
 
     def switch_tab_to_self(self):
@@ -170,6 +178,7 @@ class new_tab:
 class TabManager:
     def __init__(self):
         self.tabs = []
+        self.current_tab = None
     
     def get_numotabs(self):
         return len(self.tabs)
@@ -182,9 +191,13 @@ class TabManager:
             self.tabs.remove(tab)
 
     def switch_to_tab(self, tab):
+        print(f"Switching to tab: {tab.tab_button.cget('text')}")
+        self.current_tab = tab
         for t in self.tabs:
             t.deactivate()
         tab.activate()
+    def get_current_tab(self):
+        return self.current_tab
 
 
 
