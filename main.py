@@ -7,17 +7,16 @@ from markdown_parser import parse_markdown
 from converter import parsed_to_readable
 
 import os
+
 # Root window configuration
 root = tk.Tk()
 
 root.title("MarkEd")
-#root.state('zoomed')
 root.configure(bg='gray15')
 
 # Top frame - save, open file, etc.
-top_frame = tk.Frame(root, height=1, bg='gray15')
-top_frame.pack(fill='x', padx=10, pady=10)
-
+top_frame = tk.Frame(root, height=1)
+top_frame.grid(row=0, column=0, sticky="nsw", padx=5, pady=5)
 
 file_path = ""
 
@@ -45,6 +44,7 @@ def open_file():
             markdown_box.delete(1.0, tk.END)
             markdown_box.insert(tk.END, text)
             realtext_box.config(state="normal")
+            realtext_box.delete(1.0, tk.END)
             parsed_text = parse_markdown(text)
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
@@ -62,7 +62,6 @@ save_btn.grid(row=0, column=1, padx=5, sticky='w')
 # Markdown frame - markdown text
 markdown_frame = tk.Frame(root, bg='gray30')
 markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
-
 
 def update_text(event=None):
     def delayed_update():
@@ -193,10 +192,6 @@ class TabManager:
     def get_current_tab(self):
         return self.current_tab
 
-
-
-
-
 global tabsframe
 tabsframe = tk.Frame(markdown_frame)
 tabsframe.pack(side='top', fill='x')
@@ -208,7 +203,6 @@ markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=
 markdown_box.pack(side='right', fill='both', expand=True)
 markdown_box.bind("<KeyPress>", update_text, add="+")
 
-
 linenumbers = TextLineNumbers(markdown_frame, width=30)
 linenumbers.attach(markdown_box)
 linenumbers.pack(side='left', fill='y')
@@ -217,10 +211,8 @@ linenumbers.pack(side='left', fill='y')
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-
 realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
 realtext_box.pack(fill='both', expand=True)
-
 
 markdown_box.attach(linenumbers)
 markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
@@ -233,7 +225,10 @@ global thetab_manager
 thetab_manager = TabManager()
 new_tab(thetab_manager)
 
+realtext_frame.columnconfigure(0, weight=1)
+realtext_frame.rowconfigure(0, weight=1)
 
-
+realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True)
+realtext_box.grid(row=0, column=0, sticky="nsew")
 
 root.mainloop()
