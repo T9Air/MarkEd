@@ -135,7 +135,6 @@ class new_tab:
         self.switch_tab_to_self()
     
     def rename(self, renameto):
-        print(f"Renaming button to: {renameto}")
         self.tab_button.config(text=renameto)
 
     def switch_tab_to_self(self):
@@ -191,7 +190,6 @@ class TabManager:
             self.tabs.remove(tab)
 
     def switch_to_tab(self, tab):
-        print(f"Switching to tab: {tab.tab_button.cget('text')}")
         self.current_tab = tab
         for t in self.tabs:
             t.deactivate()
