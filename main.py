@@ -22,24 +22,17 @@ top_frame.pack(fill='x', padx=10, pady=10)
 file_path = ""
 
 def save():
-    global file_path
-    if file_path == "":
-        save_file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")]) 
-
-        if save_file_path:
-            with open(save_file_path, "w") as file:
-                file.write(markdown_box.get("1.0", tk.END))
-            file_path = save_file_path
-    else:
-        with open(file_path, "w") as file:
-            file.write(markdown_box.get("1.0", tk.END))
-
     current_tab = thetab_manager.get_current_tab()
-    if current_tab:
-        print(f"Renaming tab to: {os.path.basename(file_path)}")
-        current_tab.rename(renameto=os.path.basename(file_path))
-    else:
-        print("No current tab found.")
+    if not current_tab.file_path:
+        current_tab.file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
+        if not current_tab.file_path:
+            return
+    text = markdown_box.get(1.0, tk.END)
+    with open(current_tab.file_path, "w") as file:
+        file.write(text)
+
+    current_tab.rename(renameto=os.path.basename(current_tab.file_path))
+
 
 def open_file():
     global file_path
@@ -57,6 +50,7 @@ def open_file():
             realtext_box.config(state="disabled")
         file_path = open_file_path
         openfiletab.textoftab = text
+        openfiletab.file_path = open_file_path
         openfiletab.rename(renameto=os.path.basename(open_file_path))
 
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
@@ -118,6 +112,8 @@ class new_tab:
     def __init__(self, tab_manager):
         global tabsframe, markdown_box, root
         self.textoftab = ''
+        self.file_path = None
+
         self.tab_manager = tab_manager
 
         self.tab_frame = tk.Frame(tabsframe)
