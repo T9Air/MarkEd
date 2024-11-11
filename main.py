@@ -49,6 +49,7 @@ def open_file():
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
         file_path = open_file_path
+        openfiletab.textoftab = text
         openfiletab.rename(renameto=os.path.basename(open_file_path))
 
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
