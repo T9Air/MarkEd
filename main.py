@@ -9,6 +9,7 @@ from converter import parsed_to_readable
 import os
 # Root window configuration
 root = tk.Tk()
+root.iconbitmap('icon.ico')
 
 root.title("MarkEd")
 #root.state('zoomed')
