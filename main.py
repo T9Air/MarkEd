@@ -44,6 +44,7 @@ def open_file():
             markdown_box.delete(1.0, tk.END)
             markdown_box.insert(tk.END, text)
             realtext_box.config(state="normal")
+            realtext_box.delete(1.0, tk.END)
             parsed_text = parse_markdown(text)
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
