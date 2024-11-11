@@ -212,7 +212,7 @@ linenumbers.pack(side='left', fill='y')
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
+realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='grey30')
 realtext_box.pack(fill='both', expand=True)
 
 markdown_box.attach(linenumbers)
