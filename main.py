@@ -6,6 +6,7 @@ from markdown_parser import parse_markdown
 
 from converter import parsed_to_readable
 
+import os
 # Root window configuration
 root = tk.Tk()
 
@@ -38,7 +39,7 @@ def open_file():
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
     
     if open_file_path:
-        new_tab(thetab_manager)
+        openfiletab = new_tab(thetab_manager)
         with open(open_file_path, "r") as file:
             text = file.read()
             markdown_box.delete(1.0, tk.END)
@@ -48,6 +49,7 @@ def open_file():
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
         file_path = open_file_path
+        openfiletab.rename(renameto=os.path.basename(open_file_path))
 
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
 open_btn.grid(row=0, column=0, padx=5, sticky='w')
@@ -123,6 +125,9 @@ class new_tab:
         self.update_delete_buttons()
 
         self.switch_tab_to_self()
+    
+    def rename(self, renameto):
+        self.tab_button.config(text=renameto)
 
     def switch_tab_to_self(self):
         self.tab_manager.switch_to_tab(self)
