@@ -16,12 +16,12 @@ root.title("MarkEd")
 root.configure(bg='gray15')
 
 # Top frame - save, open file, etc.
-top_frame = tk.Frame(root, height=1)
-top_frame.grid(row=0, column=0, sticky="nsw", padx=5, pady=5)
+top_frame = tk.Frame(root, bg='gray15')
+top_frame.pack(fill='x', padx=10, pady=10)
 
 file_path = ""
 
-def save():
+def save_file():
     current_tab = thetab_manager.get_current_tab()
     if not current_tab.file_path:
         current_tab.file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
@@ -34,7 +34,7 @@ def save():
     current_tab.rename(renameto=os.path.basename(current_tab.file_path))
 
 
-def open_file():
+def open_file(): 
     global file_path
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
     
@@ -57,7 +57,7 @@ def open_file():
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
 open_btn.grid(row=0, column=0, padx=5, sticky='w')
 
-save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief='flat', overrelief='solid')
+save_btn = tk.Button(top_frame, text="Save file", height=1, command=save_file, relief='flat', overrelief='solid')
 save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
 # Markdown frame - markdown text
@@ -200,7 +200,7 @@ tabsframe.pack(side='top', fill='x')
 add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
 add_new_tabB.pack(fill='x', expand=True, side='left')
 
-markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
+markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15', selectforeground='white')
 markdown_box.pack(side='right', fill='both', expand=True)
 markdown_box.bind("<KeyPress>", update_text, add="+")
 
@@ -226,10 +226,5 @@ global thetab_manager
 thetab_manager = TabManager()
 new_tab(thetab_manager)
 
-realtext_frame.columnconfigure(0, weight=1)
-realtext_frame.rowconfigure(0, weight=1)
-
-realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True)
-realtext_box.grid(row=0, column=0, sticky="nsew")
 
 root.mainloop()
