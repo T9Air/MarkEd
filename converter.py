@@ -4,6 +4,8 @@ import tkinter as tk
 
 def parsed_to_readable(parsed_text, textbox):
     split_text = parsed_text.split("(newline)")
+    ordered_list_num = 0
+    
     for line in split_text:
         font_size = None
         
@@ -32,6 +34,15 @@ def parsed_to_readable(parsed_text, textbox):
             heading = "r"
             font_size = 14
             bold = ""
+        
+        # Ordered list
+        textbox.tag_configure("ordered", font=("Arial", 14))
+        if line.startswith("(ol)"):
+            ordered_list_num += 1
+            textbox.insert(tk.END, str(ordered_list_num) + ". ", "ordered")
+            line = line[4:]
+        else:
+            ordered_list_num = 0
         
         # Unordered list
         textbox.tag_configure("bullet", font=("Arial", 14, "bold"))

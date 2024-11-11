@@ -15,6 +15,7 @@ markdown_rules = {
     "checked_box": (r"\ - \[ \] (.+)$", "(checked)\\1"),
     "unchecked_box": (r"\ - \[x\] (.+)$", "(unchecked)\\1"),
     "unordered_list": (r"^\ - (.+)$", "(ul)\\1"),
+    "ordered_list": (r"\d+\. (.+)$", "(ol)\\1"),
     "newline": (r"\n", "(newline)")
 }
 
