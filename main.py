@@ -30,18 +30,16 @@ def save_file():
     text = markdown_box.get(1.0, tk.END)
     with open(current_tab.file_path, "w") as file:
         file.write(text)
-
     current_tab.rename(renameto=os.path.basename(current_tab.file_path))
 
-
-def open_file(): 
-    global file_path
+def open_file():
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
-    
     if open_file_path:
         openfiletab = new_tab(thetab_manager)
         with open(open_file_path, "r") as file:
             text = file.read()
+            openfiletab.textoftab = text
+            openfiletab.file_path = open_file_path
             markdown_box.delete(1.0, tk.END)
             markdown_box.insert(tk.END, text)
             realtext_box.config(state="normal")
@@ -49,10 +47,8 @@ def open_file():
             parsed_text = parse_markdown(text)
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
-        file_path = open_file_path
-        openfiletab.textoftab = text
-        openfiletab.file_path = open_file_path
         openfiletab.rename(renameto=os.path.basename(open_file_path))
+
 
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
 open_btn.grid(row=0, column=0, padx=5, sticky='w')
@@ -113,7 +109,6 @@ class new_tab:
         global tabsframe, markdown_box, root
         self.textoftab = ''
         self.file_path = None
-
         self.tab_manager = tab_manager
 
         self.tab_frame = tk.Frame(tabsframe)
@@ -129,7 +124,7 @@ class new_tab:
         self.update_delete_buttons()
 
         self.switch_tab_to_self()
-    
+
     def rename(self, renameto):
         self.tab_button.config(text=renameto)
 
@@ -149,9 +144,10 @@ class new_tab:
         self.tab_delbutton.config(bg='gray30')
 
     def deactivate(self):
+        self.textoftab = markdown_box.get(1.0, tk.END)  # Save the content to the tab's attribute
         self.tab_button.config(bg='gray15')
         self.tab_delbutton.config(bg='gray15')
-    
+
     def delete_tab(self):
         self.tab_frame.destroy()
         self.tab_manager.unregister_tab(self)
@@ -160,7 +156,6 @@ class new_tab:
             self.tab_manager.tabs[0].switch_tab_to_self()
 
     def update_var(self, e):
-        global markdown_box
         self.textoftab = markdown_box.get(1.0, tk.END)
 
     def update_delete_buttons(self):
@@ -169,6 +164,7 @@ class new_tab:
                 tab.tab_delbutton.config(state='normal')
             else:
                 tab.tab_delbutton.config(state='disabled')
+
 
 class TabManager:
     def __init__(self):
@@ -180,10 +176,12 @@ class TabManager:
 
     def register_tab(self, tab):
         self.tabs.append(tab)
+        self.update_delete_buttons()
 
     def unregister_tab(self, tab):
         if tab in self.tabs:
             self.tabs.remove(tab)
+        self.update_delete_buttons()
 
     def switch_to_tab(self, tab):
         self.current_tab = tab
@@ -192,6 +190,11 @@ class TabManager:
         tab.activate()
     def get_current_tab(self):
         return self.current_tab
+    def update_delete_buttons(self):
+        for tab in self.tabs:
+            if len(self.tabs) > 1:
+                tab.tab_delbutton.config(state='normal')
+            else: tab.tab_delbutton.config(state='disabled')
 
 global tabsframe
 tabsframe = tk.Frame(markdown_frame)
