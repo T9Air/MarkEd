@@ -186,7 +186,7 @@ def parsed_to_readable(parsed_text, textbox):
             if char_num in inlinecode_characters:
                 backgrounds = "lightgray"
             else:
-                backgrounds = "white"
+                backgrounds = "gray30"
             
             if char_num in bold_characters or heading == "h":
                 bold = ",bold"
@@ -206,14 +206,14 @@ def parsed_to_readable(parsed_text, textbox):
                     bold = ",bold"
                 italic = ","
             else:
-                backgrounds = "white"
+                backgrounds = "gray30"
             
             if char_num in link_characters:
                 foregrounds = "blue"
                 underlines = True
                 tag = "true"
             else:
-                foregrounds = "black"
+                foregrounds = "white"
                 underlines = False
                 tag = "false"
             
