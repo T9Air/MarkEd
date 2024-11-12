@@ -13,6 +13,7 @@ root = tk.Tk()
 root.title("MarkEd")
 #root.state('zoomed')
 root.configure(bg='gray15')
+root.iconbitmap('icon.ico')
 
 # Top frame - save, open file, etc.
 top_frame = tk.Frame(root, height=1, bg='gray15')
@@ -204,7 +205,7 @@ tabsframe.pack(side='top', fill='x')
 add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
 add_new_tabB.pack(fill='x', expand=True, side='left')
 
-markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white')
+markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15')
 markdown_box.pack(side='right', fill='both', expand=True)
 markdown_box.bind("<KeyPress>", update_text, add="+")
 
