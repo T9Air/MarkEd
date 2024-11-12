@@ -16,9 +16,8 @@ root.configure(bg='gray15')
 root.iconbitmap('icon.ico')
 
 # Top frame - save, open file, etc.
-top_frame = tk.Frame(root, height=1, bg='gray15')
-top_frame.pack(fill='x', padx=10, pady=10)
-
+top_frame = tk.Frame(root, height=1)
+top_frame.grid(row=0, column=0, sticky="nsw", padx=5, pady=5)
 
 file_path = ""
 
@@ -46,6 +45,7 @@ def open_file():
             markdown_box.delete(1.0, tk.END)
             markdown_box.insert(tk.END, text)
             realtext_box.config(state="normal")
+            realtext_box.delete(1.0, tk.END)
             parsed_text = parse_markdown(text)
             parsed_to_readable(parsed_text, realtext_box)
             realtext_box.config(state="disabled")
@@ -239,6 +239,10 @@ thetab_manager = TabManager()
 new_tab(thetab_manager)
 
 
+realtext_frame.columnconfigure(0, weight=1)
+realtext_frame.rowconfigure(0, weight=1)
 
+realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True)
+realtext_box.grid(row=0, column=0, sticky="nsew")
 
 root.mainloop()
