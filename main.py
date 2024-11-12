@@ -14,7 +14,6 @@ root.title("MarkEd")
 #root.state('zoomed')
 root.configure(bg='gray15')
 root.iconbitmap('icon.ico')
-root.geometry('1500x800')
 
 # Top frame - save, open file, etc.
 top_frame = tk.Frame(root, height=1, bg='gray15')
