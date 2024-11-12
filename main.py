@@ -130,6 +130,8 @@ class new_tab:
         self.update_delete_buttons()
 
         self.switch_tab_to_self()
+
+        markdown_box.redraw_line_numbers()
     
     def rename(self, renameto):
         self.tab_button.config(text=renameto)
@@ -159,6 +161,8 @@ class new_tab:
         self.update_delete_buttons()
         if self.tab_manager.tabs:
             self.tab_manager.tabs[0].switch_tab_to_self()
+
+        markdown_box.redraw_line_numbers()
 
     def update_var(self, e):
         global markdown_box
