@@ -31,7 +31,7 @@ def save():
     text = markdown_box.get(1.0, tk.END)
     with open(current_tab.file_path, "w") as file:
         file.write(text)
-
+    current_tab.file_path = file_path
     current_tab.rename(renameto=os.path.basename(current_tab.file_path))
 
 
@@ -145,7 +145,26 @@ class new_tab:
         markdown_box.insert(1.0, self.textoftab)
         markdown_box.bind('<KeyRelease>', self.update_var, add='+')
         markdown_box.bind("<KeyRelease>", markdown_box.redraw_line_numbers, add='+')
+        markdown_box.bind("<KeyRelease>", self.update_saved, add='+')
         update_text()
+
+    def update_saved(self, e):        
+        if self.file_path is None:
+            self.tab_delbutton.config(state='normal')
+            if markdown_box.get(1.0, tk.END).strip() != "":
+                self.tab_delbutton.config(text='\u2B24')
+            else:
+                self.tab_delbutton.config(text='❌')
+        else:
+            with open(self.file_path, "r") as file:
+                saved_text = file.read()
+                
+            if saved_text.strip() != markdown_box.get(1.0, tk.END).strip():
+                self.tab_delbutton.config(text='\u2B24')
+            else:
+                self.tab_delbutton.config(text='❌')
+
+
 
     def activate(self):
         self.tab_button.config(bg='gray30')
@@ -199,8 +218,6 @@ class TabManager:
         tab.activate()
     def get_current_tab(self):
         return self.current_tab
-
-
 
 
 
