@@ -163,6 +163,8 @@ class new_tab:
             self.tab_manager.tabs[0].switch_tab_to_self()
 
         markdown_box.redraw_line_numbers()
+        if len(self.tab_manager.tabs) == 0:
+            new_tab(thetab_manager)
 
     def update_var(self, e):
         global markdown_box
