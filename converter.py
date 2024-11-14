@@ -2,11 +2,13 @@ import re
 
 import tkinter as tk
 
-def parsed_to_readable(parsed_text, textbox):
+def parsed_to_readable(parsed_text, escape_positions, textbox):
     split_text = parsed_text.split("(newline)")
     ordered_list_num = 0
+    line_num = 0
     
     for line in split_text:
+        line_escape_pos = escape_positions[line_num]
         font_size = None
         
         # Headings
@@ -229,6 +231,8 @@ def parsed_to_readable(parsed_text, textbox):
             else:
                 textbox.tag_configure(tag_name, font=("Arial", font_size), background = backgrounds, foreground = foregrounds, underline = underlines)
             
-            textbox.insert(tk.END, char, tag_name)
+            if char_num - 1 not in line_escape_pos:
+                textbox.insert(tk.END, char, tag_name)
 
         textbox.insert(tk.END, "\n")
+        line_num += 1
