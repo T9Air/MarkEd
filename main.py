@@ -277,7 +277,7 @@ class TabManager:
         return self.current_tab
 
 
-# -------------------- Top frame --------------------
+# -------------------- Top Frame --------------------
 top_frame = tk.Frame(root, height=1, bg='gray15')
 top_frame.pack(fill='x', padx=10, pady=10)
 
@@ -289,19 +289,18 @@ save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
 
 
-# -------------------- Markdown and Tabs frames --------------------
-markdown_frame = tk.Frame(root, bg='gray30')
-markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
-
-    # << Tabs Frame >>
+# -------------------- Tabs Frame --------------------
 global tabsframe
-tabsframe = tk.Frame(markdown_frame)
+tabsframe = tk.Frame(root)
 tabsframe.pack(side='top', fill='x')
 
 add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
 add_new_tabB.pack(fill='x', expand=True, side='left')
 
-    # <<Cont. Markdown Frame >>
+# -------------------- Markdown Frame --------------------
+markdown_frame = tk.Frame(root, bg='gray30')
+markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+
 markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15')
 markdown_box.pack(side='right', fill='both', expand=True)
 
