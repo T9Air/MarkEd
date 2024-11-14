@@ -28,7 +28,9 @@ def parse_markdown(markdown_text):
     i = 0
     
     for line in lines:
+        # Escape any characters that would be a parsed output
         line_escape_pos = []
+        # (b) - bold
         finished = False
         while finished == False:
             match = re.search(r"(\(b\))", line)
@@ -38,31 +40,21 @@ def parse_markdown(markdown_text):
                 start, end = match.span()
                 line = line[:start] + "(\\b)" + line[end:]
                 line_escape_pos.append(start + 1)
-        escape_positions.append(line_escape_pos)
-##########################################################################
+                          
+        # Parse Markdown
         # Markdown code for the beggining of the line
         if line.startswith("###### "): # Heading 6
             line = "(h6)" + line[7:]
-            for j in line_escape_pos:
-                line_escape_pos[j] -= 3
         elif line.startswith("##### "): # Heading 5
             line = "(h5)" + line[6:]
-            for j in line_escape_pos:
-                line_escape_pos[j] -= 2
         elif line.startswith("#### "): # Heading 4
             line = "(h4)" + line[5:]
-            for j in line_escape_pos:
-                line_escape_pos[j] -= 1
         elif line.startswith("### "): # Heading 3
             line = "(h3)" + line[4:]
         elif line.startswith("## "): # Heading 2
             line = "(h2)" + line[3:]
-            for j in line_escape_pos:
-                line_escape_pos[j] += 1
         elif line.startswith("# "): # Heading 1
             line = "(h1)" + line[2:]
-            for j in line_escape_pos:
-                line_escape_pos[j] += 2
         elif line.startswith("> "): # Blockquote
             line = "(bq)" + line[2:]
         elif line.startswith(" - [x] "): # Checked Box
@@ -116,6 +108,7 @@ def parse_markdown(markdown_text):
                 start, end = match.span()
                 line = line[:start] + "(l)(name)" + match.group(1) + "(address)" + match.group(2) + "(l)" + line[end:]
         
+        escape_positions.append(line_escape_pos)
         lines[i] = line
         i += 1
     markdown_text = "(newline)".join(lines)
