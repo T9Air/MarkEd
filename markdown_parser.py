@@ -33,11 +33,11 @@ markdown_rules = {
     "italic": (r'(?<!\\)\*(?=[^\*])(.+?)(?<!\\)\*', r"(i)\1(i)"),
     "inline_code": (r'(?<!\\)`(.+?)(?<!\\)`', r"(ic)\1(ic)"),
     "link": (r'(?<!\\)\[(.+?)\](?<!\\)\((.+?)(?<!\\)\)', r"(l)(name)\1(address)\2(l)"),
-    "blockquote": (r'^(?<!\\)> (.+)$', r"(bq)\1"),
-    "checked_box": (r'^(?<!\\) - \[ \] (.+)$', r"(checked)\1"),
-    "unchecked_box": (r'^(?<!\\) - \[x\] (.+)$', r"(unchecked)\1"),
-    "unordered_list": (r'^(?<!\\) - (.+)$', r"(ul)\1"),
-    "ordered_list": (r'^\d+\. (.+)$', r"(ol)\1"),
+    # "blockquote": (r'^(?<!\\)> (.+)$', r"(bq)\1"),
+    # "checked_box": (r'^(?<!\\) - \[ \] (.+)$', r"(checked)\1"),
+    # "unchecked_box": (r'^(?<!\\) - \[x\] (.+)$', r"(unchecked)\1"),
+    # "unordered_list": (r'^(?<!\\) - (.+)$', r"(ul)\1"),
+    # "ordered_list": (r'^\d+\. (.+)$', r"(ol)\1"),
     "newline": (r'\n', r"(newline)")
 }
 
@@ -59,29 +59,39 @@ def parse_markdown(markdown_text):
                 line_escape_pos.append(start + 1)
         escape_positions.append(line_escape_pos)
 ##########################################################################
-        if line.startswith("# "): # Heading 1
-            line = "(h1)" + line[2:]
+        if line.startswith("###### "): # Heading 6
+            line = "(h6)" + line[7:]
             for j in line_escape_pos:
-                line_escape_pos[j] += 2
-        elif line.startswith("## "): # Heading 2
-            line = "(h2)" + line[3:]
-            for j in line_escape_pos:
-                line_escape_pos[j] += 1
-        elif line.startswith("### "): # Heading 3
-            line = "(h3)" + line[4:]
-        elif line.startswith("#### "): # Heading 4
-            line = "(h4)" + line[5:]
-            for j in line_escape_pos:
-                line_escape_pos[j] -= 1
+                line_escape_pos[j] -= 3
         elif line.startswith("##### "): # Heading 5
             line = "(h5)" + line[6:]
             for j in line_escape_pos:
                 line_escape_pos[j] -= 2
-        elif line.startswith("###### "): # Heading 6
-            line = "(h6)" + line[7:]
+        elif line.startswith("#### "): # Heading 4
+            line = "(h4)" + line[5:]
             for j in line_escape_pos:
-                line_escape_pos[j] -= 3
-        
+                line_escape_pos[j] -= 1
+        elif line.startswith("### "): # Heading 3
+            line = "(h3)" + line[4:]
+        elif line.startswith("## "): # Heading 2
+            line = "(h2)" + line[3:]
+            for j in line_escape_pos:
+                line_escape_pos[j] += 1
+        elif line.startswith("# "): # Heading 1
+            line = "(h1)" + line[2:]
+            for j in line_escape_pos:
+                line_escape_pos[j] += 2
+        elif line.startswith("> "): # Blockquote
+            line = "(bq)" + line[2:]
+        elif line.startswith(" - [x] "): # Checked Box
+            line = "(checked)" + line[7:]
+        elif line.startswith(" - [ ] "): # Unchecked Box
+            line = "(unchecked)" + line[7:]
+        elif line.startswith(" - "): # Unordered List
+            line = "(ul)" + line[3:]
+        elif re.match(r"^\d+\. ", line):
+            match = re.match(r"^\d+\. ", line)
+            line = "(ol)" + line[match.end():]
         lines[i] = line
         i += 1
     print(escape_positions)
