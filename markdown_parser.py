@@ -42,9 +42,29 @@ markdown_rules = {
 }
 
 def parse_markdown(markdown_text):
+    lines = markdown_text.splitlines()
+    escape_positions = []    
+    i = 0
+    
+    for line in lines:
+        line_escape_pos = []
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(b\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\b)" + line[end:]
+                line_escape_pos.append(start + 1)
+        escape_positions.append(line_escape_pos)
+        lines[i] = line
+        i += 1
+    print(escape_positions)
+    markdown_text = "\n".join(lines)
+    
     for rule_name, (pattern, replacement) in markdown_rules.items():
         markdown_text = re.sub(pattern, replacement, markdown_text, flags=re.MULTILINE)
-        print(f"Processed rule: {rule_name}")
     markdown_text = unescape_markdown(markdown_text)
     
-    return markdown_text
+    return markdown_text, escape_positions

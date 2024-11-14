@@ -10,7 +10,6 @@ from converter import parsed_to_readable
 root = tk.Tk()
 
 root.title("MarkEd")
-root.state('zoomed') 
 
 root.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=1)
@@ -45,8 +44,8 @@ def open_file():
             markdown_box.insert(tk.END, text)
             realtext_box.config(state="normal")
             realtext_box.delete(1.0, tk.END)
-            parsed_text = parse_markdown(text)
-            parsed_to_readable(parsed_text, realtext_box)
+            parsed_text, escape_positions = parse_markdown(text)
+            parsed_to_readable(parsed_text, escape_positions, realtext_box)
             realtext_box.config(state="disabled")
         file_path = open_file_path
 
@@ -70,8 +69,8 @@ def update_text(event=None):
         realtext_box.delete(1.0, tk.END)
         markdown_text = markdown_box.get(0.0, tk.END)
         
-        parsed_text = parse_markdown(markdown_text)
-        parsed_to_readable(parsed_text, realtext_box)
+        parsed_text, escape_positions = parse_markdown(markdown_text)
+        parsed_to_readable(parsed_text, escape_positions, realtext_box)
         
         realtext_box.config(state="disabled")
     root.after(1, delayed_update)
