@@ -31,8 +31,6 @@ def save():
     #current_tab.file_path = file_path
     current_tab.rename(renameto=os.path.basename(current_tab.file_path))
     current_tab.update_saved('')
-
-
 def open_file():
     global file_path
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
@@ -65,6 +63,7 @@ def update_text(event=None):
         realtext_box.config(state="disabled")
     root.after(1, delayed_update)
 
+
 class CustomText(tk.Text):
     def __init__(self, *args, **kwargs):
         tk.Text.__init__(self, *args, **kwargs)
@@ -75,7 +74,6 @@ class CustomText(tk.Text):
 
     def redraw_line_numbers(self, *args):
         self.linenumbers.redraw()
-
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)
@@ -96,6 +94,7 @@ class TextLineNumbers(tk.Canvas):
             linenum = str(i).split(".")[0]
             self.create_text(2, y, anchor="nw", text=linenum, fill='white')
             i = self.textwidget.index("%s+1line" % i)
+
 
 class new_tab:
     def __init__(self, tab_manager):
@@ -254,7 +253,6 @@ class new_tab:
                 tab.tab_delbutton.config(state='normal')
             else:
                 tab.tab_delbutton.config(state='normal')
-
 class TabManager:
     def __init__(self):
         self.tabs = []
