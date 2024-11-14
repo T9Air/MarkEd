@@ -31,8 +31,10 @@ def save():
     text = markdown_box.get(1.0, tk.END)
     with open(current_tab.file_path, "w") as file:
         file.write(text)
-    current_tab.file_path = file_path
+    root.update()
+    #current_tab.file_path = file_path
     current_tab.rename(renameto=os.path.basename(current_tab.file_path))
+    current_tab.update_saved('')
 
 
 def open_file():
@@ -194,7 +196,7 @@ class new_tab:
             if len(self.tab_manager.tabs) > 1:
                 tab.tab_delbutton.config(state='normal')
             else:
-                tab.tab_delbutton.config(state='disabled')
+                tab.tab_delbutton.config(state='normal')
 
 class TabManager:
     def __init__(self):
