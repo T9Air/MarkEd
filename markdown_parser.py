@@ -45,24 +45,44 @@ def parse_markdown(markdown_text):
         # Markdown code for the beggining of the line
         if line.startswith("###### "): # Heading 6
             line = "(h6)" + line[7:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 7
         elif line.startswith("##### "): # Heading 5
             line = "(h5)" + line[6:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 6
         elif line.startswith("#### "): # Heading 4
             line = "(h4)" + line[5:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 5
         elif line.startswith("### "): # Heading 3
             line = "(h3)" + line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         elif line.startswith("## "): # Heading 2
             line = "(h2)" + line[3:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 3
         elif line.startswith("# "): # Heading 1
             line = "(h1)" + line[2:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 2
         elif line.startswith("> "): # Blockquote
             line = "(bq)" + line[2:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 2
         elif line.startswith(" - [x] "): # Checked Box
             line = "(checked)" + line[7:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 7
         elif line.startswith(" - [ ] "): # Unchecked Box
             line = "(unchecked)" + line[7:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 7
         elif line.startswith(" - "): # Unordered List
             line = "(ul)" + line[3:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 3
         elif re.match(r"^\d+\. ", line): # Ordered List
             match = re.match(r"^\d+\. ", line)
             line = "(ol)" + line[match.end():]
