@@ -1,14 +1,10 @@
 import tkinter as tk
-
 from tkinter import filedialog
-
 from tkinter import messagebox
-
 from markdown_parser import parse_markdown
-
 from converter import parsed_to_readable
-
 import os
+
 # Root window configuration
 root = tk.Tk()
 
@@ -17,12 +13,10 @@ root.title("MarkEd")
 root.configure(bg='gray15')
 root.iconbitmap('icon.ico')
 
-# Top frame - save, open file, etc.
-top_frame = tk.Frame(root, height=1, bg='gray15')
-top_frame.pack(fill='x', padx=10, pady=10)
-
 
 file_path = ""
+
+# ------------------- Functions -------------------------
 
 def save():
     current_tab = thetab_manager.get_current_tab()
@@ -57,16 +51,6 @@ def open_file():
         openfiletab.textoftab = text
         openfiletab.file_path = open_file_path
         openfiletab.rename(renameto=os.path.basename(open_file_path))
-
-open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
-open_btn.grid(row=0, column=0, padx=5, sticky='w')
-
-save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief='flat', overrelief='solid')
-save_btn.grid(row=0, column=1, padx=5, sticky='w')
-
-# Markdown frame - markdown text
-markdown_frame = tk.Frame(root, bg='gray30')
-markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
 
 def update_text(event=None):
@@ -295,7 +279,38 @@ class TabManager:
         return self.current_tab
 
 
+# -------------------- Top frame --------------------
+top_frame = tk.Frame(root, height=1, bg='gray15')
+top_frame.pack(fill='x', padx=10, pady=10)
 
+open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
+open_btn.grid(row=0, column=0, padx=5, sticky='w')
+
+save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief='flat', overrelief='solid')
+save_btn.grid(row=0, column=1, padx=5, sticky='w')
+
+
+
+# -------------------- Markdown frame --------------------
+markdown_frame = tk.Frame(root, bg='gray30')
+markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+
+markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15')
+markdown_box.pack(side='right', fill='both', expand=True)
+
+linenumbers = TextLineNumbers(markdown_frame, width=30)
+linenumbers.attach(markdown_box)
+linenumbers.pack(side='left', fill='y')
+
+    # >> Markdown Box Bindings <<
+markdown_box.bind("<KeyPress>", update_text, add="+")
+markdown_box.attach(linenumbers)
+markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
+markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
+markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
+markdown_box.linenumbers.redraw()
+
+# -------------------- Tabs Frame --------------------
 global tabsframe
 tabsframe = tk.Frame(markdown_frame)
 tabsframe.pack(side='top', fill='x')
@@ -303,36 +318,21 @@ tabsframe.pack(side='top', fill='x')
 add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
 add_new_tabB.pack(fill='x', expand=True, side='left')
 
-markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15')
-markdown_box.pack(side='right', fill='both', expand=True)
-markdown_box.bind("<KeyPress>", update_text, add="+")
-
-
-linenumbers = TextLineNumbers(markdown_frame, width=30)
-linenumbers.attach(markdown_box)
-linenumbers.pack(side='left', fill='y')
-
-# Realtext frame - converted text
+# -------------------- Realtext frame --------------------
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
-
 
 realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray30')
 realtext_box.pack(fill='both', expand=True)
 
 
-markdown_box.attach(linenumbers)
-markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
-markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
-markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 
-markdown_box.linenumbers.redraw()
-
+# -------------------- Run Essential Functions --------------------
 global thetab_manager
 thetab_manager = TabManager()
 new_tab(thetab_manager)
 
 
 
-
+# -------------------- Mainloop --------------------
 root.mainloop()
