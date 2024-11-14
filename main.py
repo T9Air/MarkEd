@@ -141,7 +141,7 @@ class new_tab:
         markdown_box.redraw_line_numbers()
 
     def rename(self, renameto):
-        self.tab_delbutton.config(text=renameto)
+        self.tab_button.config(text=renameto)
     def switch_to_x(self, e):
         self.tab_delbutton.config(text='❌')
 
