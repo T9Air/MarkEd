@@ -119,14 +119,19 @@ class new_tab:
 
         self.tab_manager = tab_manager
 
-        self.tab_frame = tk.Frame(tabsframe)
-        self.tab_frame.pack(fill='x', expand=True, side='left')
+        self.tab_frame = tk.Frame(tabsframe, bg='grey15')
+        self.tab_frame.pack(fill='both', expand=True, side='left')
 
-        self.tab_button = tk.Button(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat', overrelief='raised', command=self.switch_tab_to_self)
+        self.tab_button = tk.Label(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat')
         self.tab_button.pack(fill='x', expand=True, side='left')
+        self.tab_button.bind('<ButtonPress-1>', self.switch_tab_to_self)
 
-        self.tab_delbutton = tk.Button(self.tab_frame, text='❌', bg='gray15', fg='white', relief='flat', overrelief='flat', command=self.delete_tab)
+        self.tab_delbutton = tk.Label(self.tab_frame, text='❌', bg='gray15', fg='white', relief='flat')
         self.tab_delbutton.pack(side='right')
+        self.tab_delbutton.bind('<ButtonPress-1>', self.delete_tab)
+        self.tab_delbutton.bind('<Enter>', self.switch_to_x)
+        self.tab_delbutton.bind('<Leave>', self.update_saved)
+
 
         self.tab_manager.register_tab(self)
         self.update_delete_buttons()
@@ -134,11 +139,13 @@ class new_tab:
         self.switch_tab_to_self()
 
         markdown_box.redraw_line_numbers()
-    
-    def rename(self, renameto):
-        self.tab_button.config(text=renameto)
 
-    def switch_tab_to_self(self):
+    def rename(self, renameto):
+        self.tab_delbutton.config(text=renameto)
+    def switch_to_x(self, e):
+        self.tab_delbutton.config(text='❌')
+
+    def switch_tab_to_self(self, e=None):
         self.tab_manager.switch_to_tab(self)
         global markdown_box
         markdown_box.unbind('<KeyRelease>')
@@ -169,14 +176,16 @@ class new_tab:
 
 
     def activate(self):
+        self.tab_frame.config(bg='gray30')
         self.tab_button.config(bg='gray30')
         self.tab_delbutton.config(bg='gray30')
 
     def deactivate(self):
+        self.tab_frame.config(bg='gray15')
         self.tab_button.config(bg='gray15')
         self.tab_delbutton.config(bg='gray15')
     
-    def delete_tab(self):
+    def delete_tab(self, e=None):
         self.tab_frame.destroy()
         self.tab_manager.unregister_tab(self)
         self.update_delete_buttons()
