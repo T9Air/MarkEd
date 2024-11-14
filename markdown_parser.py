@@ -22,5 +22,5 @@ markdown_rules = {
 def parse_markdown(markdown_text):
     for rule_name, (pattern, replacement) in markdown_rules.items():
         markdown_text = re.sub(pattern, replacement, markdown_text, flags=re.MULTILINE)
-        print(rule_name)
+        #print(rule_name)
     return markdown_text
