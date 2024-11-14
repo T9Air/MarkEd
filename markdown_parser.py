@@ -23,12 +23,12 @@ def unescape_markdown(text):
     return text
 
 markdown_rules = {
-    "heading6": (r'^(?<!\\)###### (.+)$', r"(h6)\1"),
-    "heading5": (r'^(?<!\\)##### (.+)$', r"(h5)\1"),
-    "heading4": (r'^(?<!\\)#### (.+)$', r"(h4)\1"),
-    "heading3": (r'^(?<!\\)### (.+)$', r"(h3)\1"),
-    "heading2": (r'^(?<!\\)## (.+)$', r"(h2)\1"),
-    "heading1": (r'^(?<!\\)# (.+)$', r"(h1)\1"),
+    # "heading6": (r'^(?<!\\)###### (.+)$', r"(h6)\1"),
+    # "heading5": (r'^(?<!\\)##### (.+)$', r"(h5)\1"),
+    # "heading4": (r'^(?<!\\)#### (.+)$', r"(h4)\1"),
+    # "heading3": (r'^(?<!\\)### (.+)$', r"(h3)\1"),
+    # "heading2": (r'^(?<!\\)## (.+)$', r"(h2)\1"),
+    # "heading1": (r'^(?<!\\)# (.+)$', r"(h1)\1"),
     "bold": (r'(?<!\\)\*\*(?=[^\*])(.+?)(?<!\\)\*\*', r"(b)\1(b)"),
     "italic": (r'(?<!\\)\*(?=[^\*])(.+?)(?<!\\)\*', r"(i)\1(i)"),
     "inline_code": (r'(?<!\\)`(.+?)(?<!\\)`', r"(ic)\1(ic)"),
@@ -43,7 +43,7 @@ markdown_rules = {
 
 def parse_markdown(markdown_text):
     lines = markdown_text.splitlines()
-    escape_positions = []    
+    escape_positions = [[]]    
     i = 0
     
     for line in lines:
@@ -58,6 +58,30 @@ def parse_markdown(markdown_text):
                 line = line[:start] + "(\\b)" + line[end:]
                 line_escape_pos.append(start + 1)
         escape_positions.append(line_escape_pos)
+##########################################################################
+        if line.startswith("# "): # Heading 1
+            line = "(h1)" + line[2:]
+            for j in line_escape_pos:
+                line_escape_pos[j] += 2
+        elif line.startswith("## "): # Heading 2
+            line = "(h2)" + line[3:]
+            for j in line_escape_pos:
+                line_escape_pos[j] += 1
+        elif line.startswith("### "): # Heading 3
+            line = "(h3)" + line[4:]
+        elif line.startswith("#### "): # Heading 4
+            line = "(h4)" + line[5:]
+            for j in line_escape_pos:
+                line_escape_pos[j] -= 1
+        elif line.startswith("##### "): # Heading 5
+            line = "(h5)" + line[6:]
+            for j in line_escape_pos:
+                line_escape_pos[j] -= 2
+        elif line.startswith("###### "): # Heading 6
+            line = "(h6)" + line[7:]
+            for j in line_escape_pos:
+                line_escape_pos[j] -= 3
+        
         lines[i] = line
         i += 1
     print(escape_positions)
@@ -65,6 +89,7 @@ def parse_markdown(markdown_text):
     
     for rule_name, (pattern, replacement) in markdown_rules.items():
         markdown_text = re.sub(pattern, replacement, markdown_text, flags=re.MULTILINE)
+        # print(f"Processed rule: {rule_name}")
     markdown_text = unescape_markdown(markdown_text)
     
     return markdown_text, escape_positions
