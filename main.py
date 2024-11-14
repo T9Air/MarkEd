@@ -2,6 +2,8 @@ import tkinter as tk
 
 from tkinter import filedialog
 
+from tkinter import messagebox
+
 from markdown_parser import parse_markdown
 
 from converter import parsed_to_readable
@@ -186,15 +188,77 @@ class new_tab:
         self.tab_delbutton.config(bg='gray15')
     
     def delete_tab(self, e=None):
-        self.tab_frame.destroy()
-        self.tab_manager.unregister_tab(self)
-        self.update_delete_buttons()
-        if self.tab_manager.tabs:
-            self.tab_manager.tabs[0].switch_tab_to_self()
+        if self.file_path is None:
+            if self.textoftab.strip() != "":
+                savechanges = tk.messagebox.askyesnocancel('Are you sure?', 'Do you want to save changes?')
+                if savechanges is True:
+                    save()
+                    self.tab_frame.destroy()
+                    self.tab_manager.unregister_tab(self)
+                    self.update_delete_buttons()
+                    if self.tab_manager.tabs:
+                        self.tab_manager.tabs[0].switch_tab_to_self()
 
-        markdown_box.redraw_line_numbers()
-        if len(self.tab_manager.tabs) == 0:
-            new_tab(thetab_manager)
+                    markdown_box.redraw_line_numbers()
+                    if len(self.tab_manager.tabs) == 0:
+                        new_tab(thetab_manager)
+                elif savechanges is False:
+                    self.tab_frame.destroy()
+                    self.tab_manager.unregister_tab(self)
+                    self.update_delete_buttons()
+                    if self.tab_manager.tabs:
+                        self.tab_manager.tabs[0].switch_tab_to_self()
+
+                    markdown_box.redraw_line_numbers()
+                    if len(self.tab_manager.tabs) == 0:
+                        new_tab(thetab_manager)
+            else:
+                self.tab_frame.destroy()
+                self.tab_manager.unregister_tab(self)
+                self.update_delete_buttons()
+                if self.tab_manager.tabs:
+                    self.tab_manager.tabs[0].switch_tab_to_self()
+
+                markdown_box.redraw_line_numbers()
+                if len(self.tab_manager.tabs) == 0:
+                    new_tab(thetab_manager)
+        else:
+            with open(self.file_path, "r") as file:
+                saved_text = file.read()
+            if saved_text.strip() != self.textoftab.strip():
+                savechanges = tk.messagebox.askyesnocancel('Are you sure?', 'Do you want to save changes?')
+                if savechanges is True:
+                    save()
+                    self.tab_frame.destroy()
+                    self.tab_manager.unregister_tab(self)
+                    self.update_delete_buttons()
+                    if self.tab_manager.tabs:
+                        self.tab_manager.tabs[0].switch_tab_to_self()
+
+                    markdown_box.redraw_line_numbers()
+                    if len(self.tab_manager.tabs) == 0:
+                        new_tab(thetab_manager)
+                elif savechanges is False:
+                    self.tab_frame.destroy()
+                    self.tab_manager.unregister_tab(self)
+                    self.update_delete_buttons()
+                    if self.tab_manager.tabs:
+                        self.tab_manager.tabs[0].switch_tab_to_self()
+
+                    markdown_box.redraw_line_numbers()
+                    if len(self.tab_manager.tabs) == 0:
+                        new_tab(thetab_manager)
+            else:
+                self.tab_frame.destroy()
+                self.tab_manager.unregister_tab(self)
+                self.update_delete_buttons()
+                if self.tab_manager.tabs:
+                    self.tab_manager.tabs[0].switch_tab_to_self()
+
+                markdown_box.redraw_line_numbers()
+                if len(self.tab_manager.tabs) == 0:
+                    new_tab(thetab_manager)
+        
 
     def update_var(self, e):
         global markdown_box
