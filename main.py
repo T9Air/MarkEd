@@ -291,10 +291,19 @@ save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
 
 
-# -------------------- Markdown frame --------------------
+# -------------------- Markdown and Tabs frames --------------------
 markdown_frame = tk.Frame(root, bg='gray30')
 markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
+    # << Tabs Frame >>
+global tabsframe
+tabsframe = tk.Frame(markdown_frame)
+tabsframe.pack(side='top', fill='x')
+
+add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
+add_new_tabB.pack(fill='x', expand=True, side='left')
+
+    # <<Cont. Markdown Frame >>
 markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15')
 markdown_box.pack(side='right', fill='both', expand=True)
 
@@ -309,14 +318,6 @@ markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
 markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
 markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 markdown_box.linenumbers.redraw()
-
-# -------------------- Tabs Frame --------------------
-global tabsframe
-tabsframe = tk.Frame(markdown_frame)
-tabsframe.pack(side='top', fill='x')
-
-add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
-add_new_tabB.pack(fill='x', expand=True, side='left')
 
 # -------------------- Realtext frame --------------------
 realtext_frame = tk.Frame(root)
