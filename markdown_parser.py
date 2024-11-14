@@ -24,7 +24,7 @@ def unescape_markdown(text):
 
 def parse_markdown(markdown_text):
     lines = markdown_text.splitlines()
-    escape_positions = [[]]    
+    escape_positions = []    
     i = 0
     
     for line in lines:
