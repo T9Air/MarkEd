@@ -39,6 +39,8 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             heading = "h"
             bold = "bold"
             line = line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         else:
             heading = "r"
             font_size = 14
@@ -58,6 +60,8 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         if line.startswith("(ul)"):
             textbox.insert(tk.END, " " + u"\u2022" + " ", "bullet")
             line = line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         
         # Blockquote
         blockquote_tag = "blockquote" + str(font_size)
@@ -65,18 +69,24 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         if line.startswith("(bq)"):
             textbox.insert(tk.END, " ", blockquote_tag)
             line = " " + line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 3
             
         # Unchecked box
         textbox.tag_configure("unchecked", font=("Arial", 14))
         if line.startswith("(unchecked)"):
             textbox.insert(tk.END, u"\u2610" + " ", "unchecked")
             line = line[11:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 11
         
         # Checked box
         textbox.tag_configure("checked", font=("Arial", 14))
         if line.startswith("(checked)"):
             textbox.insert(tk.END, u"\u2611" + " ", "unchecked")
             line = line[9:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 9
         
         # Links
         # NOTE: Links do not actually link to any website yet
