@@ -145,7 +145,14 @@ def parse_markdown(markdown_text):
             else:
                 start, end = match.span()
                 line = line[:start] + "(l)(name)" + match.group(1) + "(address)" + match.group(2) + "(l)" + line[end:]
-        
+                name_start, name_end = match.span(1)
+                address_len = len(match.group(2))
+                for j in range(len(line_escape_pos)):
+                    if line_escape_pos[j - 1] > end:
+                        line_escape_pos[j - 1] -= address_len + 4
+                    elif line_escape_pos[j - 1] > name_start:
+                        line_escape_pos[j - 1] -= 1
+                
         escape_positions.append(line_escape_pos)
         lines[i] = line
         i += 1
