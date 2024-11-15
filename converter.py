@@ -18,20 +18,27 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                 heading_level = i
                 break
         
-        if heading_level:
-            font_size = {
-                1: 22,
-                2: 18,
-                3: 16,
-                4: 14,
-                5: 12,
-                6: 11
-            }.get(heading_level, 14)
-            line = line[4:]
+        match heading_level:
+            case 1:
+                font_size = 22
+            case 2:
+                font_size = 18
+            case 3:
+                font_size = 16
+            case 4:
+                font_size = 14
+            case 5:
+                font_size = 12
+            case 6:
+                font_size = 11
+            case None:
+                font_size = 14
+            
         
         if heading_level:
             heading = "h"
             bold = "bold"
+            line = line[4:]
         else:
             heading = "r"
             font_size = 14
