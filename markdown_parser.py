@@ -99,6 +99,12 @@ def parse_markdown(markdown_text):
             else:
                 start, end = match.span()
                 line = line[:start] + "(b)" + match.group(1) + "(b)" + line[end:]
+                for j in range(len(line_escape_pos)):
+                    if line_escape_pos[j - 1] > end:
+                        line_escape_pos[j - 1] -= 2
+                    if line_escape_pos[j - 1] > start:
+                        line_escape_pos[j - 1] -= 2
+                    
         
         # Italic
         finished = False
@@ -109,6 +115,11 @@ def parse_markdown(markdown_text):
             else:
                 start, end = match.span()
                 line = line[:start] + "(i)" + match.group(1) + "(i)" + line[end:]
+                for j in range(len(line_escape_pos)):
+                    if line_escape_pos[j - 1] > end:
+                        line_escape_pos[j - 1] -= 1
+                    if line_escape_pos[j - 1] > start:
+                        line_escape_pos[j - 1] -= 1
         
         # Inline Code
         finished = False
@@ -119,6 +130,11 @@ def parse_markdown(markdown_text):
             else:
                 start, end = match.span()
                 line = line[:start] + "(ic)" + match.group(1) + "(ic)" + line[end:]
+                for j in range(len(line_escape_pos)):
+                    if line_escape_pos[j - 1] > end:
+                        line_escape_pos[j - 1] -= 1
+                    if line_escape_pos[j - 1] > start:
+                        line_escape_pos[j - 1] -= 1
         
         # Link
         finished = False
