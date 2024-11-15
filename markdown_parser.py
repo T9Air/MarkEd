@@ -46,48 +46,46 @@ def parse_markdown(markdown_text):
         if line.startswith("###### "): # Heading 6
             line = "(h6)" + line[7:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 7
+                line_escape_pos[j - 1] -= 3
         elif line.startswith("##### "): # Heading 5
             line = "(h5)" + line[6:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 6
+                line_escape_pos[j - 1] -= 2
         elif line.startswith("#### "): # Heading 4
             line = "(h4)" + line[5:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 5
+                line_escape_pos[j - 1] -= 1
         elif line.startswith("### "): # Heading 3
             line = "(h3)" + line[4:]
-            for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 4
         elif line.startswith("## "): # Heading 2
             line = "(h2)" + line[3:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 3
+                line_escape_pos[j - 1] += 1
         elif line.startswith("# "): # Heading 1
             line = "(h1)" + line[2:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 2
+                line_escape_pos[j - 1] += 2
         elif line.startswith("> "): # Blockquote
             line = "(bq)" + line[2:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 2
+                line_escape_pos[j - 1] += 2
         elif line.startswith(" - [x] "): # Checked Box
             line = "(checked)" + line[7:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 7
+                line_escape_pos[j - 1] += 2
         elif line.startswith(" - [ ] "): # Unchecked Box
             line = "(unchecked)" + line[7:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 7
+                line_escape_pos[j - 1] += 4
         elif line.startswith(" - "): # Unordered List
             line = "(ul)" + line[3:]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= 3
+                line_escape_pos[j - 1] += 1
         elif re.match(r"^\d+\. ", line): # Ordered List
             match = re.match(r"^\d+\. ", line)
             line = "(ol)" + line[match.end():]
             for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] -= match.end()
+                line_escape_pos[j - 1] -= match.end() - 4
         
         # Inline Markdown Code
         # Bold
@@ -101,9 +99,9 @@ def parse_markdown(markdown_text):
                 line = line[:start] + "(b)" + match.group(1) + "(b)" + line[end:]
                 for j in range(len(line_escape_pos)):
                     if line_escape_pos[j - 1] > end:
-                        line_escape_pos[j - 1] -= 2
+                        line_escape_pos[j - 1] += 2
                     if line_escape_pos[j - 1] > start:
-                        line_escape_pos[j - 1] -= 2
+                        line_escape_pos[j - 1] += 1
                     
         
         # Italic
@@ -117,9 +115,9 @@ def parse_markdown(markdown_text):
                 line = line[:start] + "(i)" + match.group(1) + "(i)" + line[end:]
                 for j in range(len(line_escape_pos)):
                     if line_escape_pos[j - 1] > end:
-                        line_escape_pos[j - 1] -= 1
+                        line_escape_pos[j - 1] += 4
                     if line_escape_pos[j - 1] > start:
-                        line_escape_pos[j - 1] -= 1
+                        line_escape_pos[j - 1] += 2
         
         # Inline Code
         finished = False
@@ -132,9 +130,9 @@ def parse_markdown(markdown_text):
                 line = line[:start] + "(ic)" + match.group(1) + "(ic)" + line[end:]
                 for j in range(len(line_escape_pos)):
                     if line_escape_pos[j - 1] > end:
-                        line_escape_pos[j - 1] -= 1
+                        line_escape_pos[j - 1] += 6
                     if line_escape_pos[j - 1] > start:
-                        line_escape_pos[j - 1] -= 1
+                        line_escape_pos[j - 1] += 3
         
         # Link
         finished = False
@@ -149,9 +147,9 @@ def parse_markdown(markdown_text):
                 address_len = len(match.group(2))
                 for j in range(len(line_escape_pos)):
                     if line_escape_pos[j - 1] > end:
-                        line_escape_pos[j - 1] -= address_len + 4
+                        line_escape_pos[j - 1] += 17
                     elif line_escape_pos[j - 1] > name_start:
-                        line_escape_pos[j - 1] -= 1
+                        line_escape_pos[j - 1] += 8
                 
         escape_positions.append(line_escape_pos)
         lines[i] = line
