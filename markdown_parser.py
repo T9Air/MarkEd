@@ -40,6 +40,28 @@ def parse_markdown(markdown_text):
                 start, end = match.span()
                 line = line[:start] + "(\\b)" + line[end:]
                 line_escape_pos.append(start + 1)
+        
+        # (i) - italic
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(i\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\i)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (ic) - inline code
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(ic\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\ic)" + line[end:]
+                line_escape_pos.append(start + 1)
                           
         # Parse Markdown
         # Markdown code for the beggining of the line
