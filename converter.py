@@ -52,6 +52,9 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             ordered_list_num += 1
             textbox.insert(tk.END, str(ordered_list_num) + ". ", "ordered")
             line = line[4:]
+            length = len(str(ordered_list_num))
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         else:
             ordered_list_num = 0
         
