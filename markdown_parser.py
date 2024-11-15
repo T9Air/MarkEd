@@ -86,6 +86,8 @@ def parse_markdown(markdown_text):
         elif re.match(r"^\d+\. ", line): # Ordered List
             match = re.match(r"^\d+\. ", line)
             line = "(ol)" + line[match.end():]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= match.end()
         
         # Inline Markdown Code
         # Bold
