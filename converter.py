@@ -126,6 +126,11 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                     link_characters[i - 1] -= 3
                 if link_characters[i - 1] > end - end_subtract:
                     link_characters[i - 1] -= 3
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 6
+                elif line_escape_pos[j - 1] > start:
+                    line_escape_pos[j - 1] -= 3
             bold_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -157,6 +162,11 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                     link_characters[i - 1] -= 3
                 if link_characters[i - 1] > end - end_subtract:
                     link_characters[i - 1] -= 3
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 6
+                elif line_escape_pos[j - 1] > start:
+                    line_escape_pos[j - 1] -= 3
             italic_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -193,6 +203,11 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                     link_characters[i - 1] -= 4
                 if link_characters[i - 1] > end - end_subtract:
                     link_characters[i - 1] -= 4
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 8
+                elif line_escape_pos[j - 1] > start:
+                    line_escape_pos[j - 1] -= 4
             inlinecode_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 8
             end_subtract = end_subtract + 8
