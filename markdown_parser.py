@@ -62,7 +62,73 @@ def parse_markdown(markdown_text):
                 start, end = match.span()
                 line = line[:start] + "(\\ic)" + line[end:]
                 line_escape_pos.append(start + 1)
-                          
+        
+        # (h1) - Heading 1
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(h1\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\h1)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (h2) - Heading 2
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(h2\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\h2)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (h3) - Heading 3
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(h3\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\h3)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (h4) - Heading 4
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(h4\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\h4)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (h5) - Heading 5
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(h5\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\h5)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (h6) - Heading 6
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(h6\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\h6)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
         # Parse Markdown
         # Markdown code for the beggining of the line
         if line.startswith("###### "): # Heading 6
