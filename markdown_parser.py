@@ -184,6 +184,40 @@ def parse_markdown(markdown_text):
                 line = line[:start] + "(\\unchecked)" + line[end:]
                 line_escape_pos.append(start + 1)
         
+        # Links
+        # (l)
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(l\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\l)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (name)
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(name\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\name)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (address)
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(address\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\address)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
         # Parse Markdown
         # Markdown code for the beggining of the line
         if line.startswith("###### "): # Heading 6
