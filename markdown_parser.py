@@ -129,6 +129,61 @@ def parse_markdown(markdown_text):
                 line = line[:start] + "(\\h6)" + line[end:]
                 line_escape_pos.append(start + 1)
         
+        # (bq) - Blockquote
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(bq\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\bq)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (ul) - Unordered List
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(ul\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\ul)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (ol) - Ordered List
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(ol\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\ol)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (checked) - Checked Box
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(checked\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\checked)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
+        # (unchecked) - Unchecked Box
+        finished = False
+        while finished == False:
+            match = re.search(r"(\(unchecked\))", line)
+            if not match:
+                finished = True
+            else:
+                start, end = match.span()
+                line = line[:start] + "(\\unchecked)" + line[end:]
+                line_escape_pos.append(start + 1)
+        
         # Parse Markdown
         # Markdown code for the beggining of the line
         if line.startswith("###### "): # Heading 6
