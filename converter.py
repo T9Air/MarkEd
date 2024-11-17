@@ -2,11 +2,13 @@ import re
 
 import tkinter as tk
 
-def parsed_to_readable(parsed_text, textbox):
+def parsed_to_readable(parsed_text, escape_positions, textbox):
     split_text = parsed_text.split("(newline)")
     ordered_list_num = 0
+    line_num = 0
     
     for line in split_text:
+        line_escape_pos = escape_positions[line_num]
         font_size = None
         
         # Headings
@@ -16,20 +18,29 @@ def parsed_to_readable(parsed_text, textbox):
                 heading_level = i
                 break
         
-        if heading_level:
-            font_size = {
-                1: 22,
-                2: 18,
-                3: 16,
-                4: 14,
-                5: 12,
-                6: 11
-            }.get(heading_level, 14)
-            line = line[4:]
+        match heading_level:
+            case 1:
+                font_size = 22
+            case 2:
+                font_size = 18
+            case 3:
+                font_size = 16
+            case 4:
+                font_size = 14
+            case 5:
+                font_size = 12
+            case 6:
+                font_size = 11
+            case None:
+                font_size = 14
+            
         
         if heading_level:
             heading = "h"
             bold = "bold"
+            line = line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         else:
             heading = "r"
             font_size = 14
@@ -41,6 +52,9 @@ def parsed_to_readable(parsed_text, textbox):
             ordered_list_num += 1
             textbox.insert(tk.END, str(ordered_list_num) + ". ", "ordered")
             line = line[4:]
+            length = len(str(ordered_list_num))
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         else:
             ordered_list_num = 0
         
@@ -49,6 +63,8 @@ def parsed_to_readable(parsed_text, textbox):
         if line.startswith("(ul)"):
             textbox.insert(tk.END, " " + u"\u2022" + " ", "bullet")
             line = line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 4
         
         # Blockquote
         blockquote_tag = "blockquote" + str(font_size)
@@ -56,18 +72,24 @@ def parsed_to_readable(parsed_text, textbox):
         if line.startswith("(bq)"):
             textbox.insert(tk.END, " ", blockquote_tag)
             line = " " + line[4:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 3
             
         # Unchecked box
         textbox.tag_configure("unchecked", font=("Arial", 14))
         if line.startswith("(unchecked)"):
-            textbox.insert(tk.END, u"\u2611" + " ", "unchecked")
+            textbox.insert(tk.END, u"\u2610" + " ", "unchecked")
             line = line[11:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 11
         
         # Checked box
         textbox.tag_configure("checked", font=("Arial", 14))
         if line.startswith("(checked)"):
-            textbox.insert(tk.END, u"\u2610" + " ", "unchecked")
+            textbox.insert(tk.END, u"\u2611" + " ", "unchecked")
             line = line[9:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] -= 9
         
         # Links
         # NOTE: Links do not actually link to any website yet
@@ -104,6 +126,11 @@ def parsed_to_readable(parsed_text, textbox):
                     link_characters[i - 1] -= 3
                 if link_characters[i - 1] > end - end_subtract:
                     link_characters[i - 1] -= 3
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 6
+                elif line_escape_pos[j - 1] > start:
+                    line_escape_pos[j - 1] -= 3
             bold_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -135,6 +162,11 @@ def parsed_to_readable(parsed_text, textbox):
                     link_characters[i - 1] -= 3
                 if link_characters[i - 1] > end - end_subtract:
                     link_characters[i - 1] -= 3
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 6
+                elif line_escape_pos[j - 1] > start:
+                    line_escape_pos[j - 1] -= 3
             italic_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 6
             end_subtract = end_subtract + 6
@@ -171,6 +203,11 @@ def parsed_to_readable(parsed_text, textbox):
                     link_characters[i - 1] -= 4
                 if link_characters[i - 1] > end - end_subtract:
                     link_characters[i - 1] -= 4
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 8
+                elif line_escape_pos[j - 1] > start:
+                    line_escape_pos[j - 1] -= 4
             inlinecode_characters.extend([i for i in range(start + 1 - start_subtract, end + 1 - end_subtract)])
             start_subtract = start_subtract + 8
             end_subtract = end_subtract + 8
@@ -229,6 +266,8 @@ def parsed_to_readable(parsed_text, textbox):
             else:
                 textbox.tag_configure(tag_name, font=("Arial", font_size), background = backgrounds, foreground = foregrounds, underline = underlines)
             
-            textbox.insert(tk.END, char, tag_name)
+            if char_num - 1 not in line_escape_pos:
+                textbox.insert(tk.END, char, tag_name)
 
         textbox.insert(tk.END, "\n")
+        line_num += 1
