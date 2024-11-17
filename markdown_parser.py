@@ -1,26 +1,126 @@
 import re
 
-def unescape_markdown(text, line_escape_pos):
-    text = text.replace('\\\\', '\u0000')
+def unescape_markdown(line, line_escape_pos):
+    line = line.replace('\\\\', '\u0000')
     
-    replacements = [
-        ('\\*', '*'),
-        ('\\_', '_'),
-        ('\\`', '`'),
-        ('\\[', '['),
-        ('\\]', ']'),
-        ('\\(', '('),
-        ('\\)', ')'),
-        ('\\#', '#'),
-        ('\\-', '-'),
-    ]
+    # Astericks
+    finished = False
+    while not finished:
+        match = re.search(r"\\\*", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "*" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
     
-    for escaped, unescaped in replacements:
-        text = text.replace(escaped, unescaped)
+    # Backtick
+    finished = False
+    while not finished:
+        match = re.search(r"\\`", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "`" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
     
-    text = text.replace('\u0000', '\\')
+    # Open Bracket
+    finished = False
+    while not finished:
+        match = re.search(r"\\\[", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "[" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
     
-    return text, line_escape_pos
+    # Closed Bracket
+    finished = False
+    while not finished:
+        match = re.search(r"\\\]", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "]" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Open Parentheses
+    finished = False
+    while not finished:
+        match = re.search(r"\\\(", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Closed Parentheses
+    finished = False
+    while not finished:
+        match = re.search(r"\\\)", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + ")" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Hashtag
+    finished = False
+    while not finished:
+        match = re.search(r"\\#", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "#" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Hyphen
+    finished = False
+    while not finished:
+        match = re.search(r"\u0000", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "\\" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Hyphen
+    finished = False
+    while not finished:
+        match = re.search(r"\\-", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "-" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    return line, line_escape_pos
 
 def parse_markdown(markdown_text):
     lines = markdown_text.splitlines()
