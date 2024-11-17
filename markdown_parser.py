@@ -39,18 +39,18 @@ def parse_markdown(markdown_text):
             line = "(bq)" + line[2:]
             for j in range(len(line_escape_pos)):
                 line_escape_pos[j - 1] += 2
-        elif line.startswith(" - [x] "): # Checked Box
-            line = "(checked)" + line[7:]
+        elif line.startswith("- [x] "): # Checked Box
+            line = "(checked)" + line[6:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] += 3
+        elif line.startswith("- [ ] "): # Unchecked Box
+            line = "(unchecked)" + line[6:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] += 5
+        elif line.startswith("- "): # Unordered List
+            line = "(ul)" + line[2:]
             for j in range(len(line_escape_pos)):
                 line_escape_pos[j - 1] += 2
-        elif line.startswith(" - [ ] "): # Unchecked Box
-            line = "(unchecked)" + line[7:]
-            for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] += 4
-        elif line.startswith(" - "): # Unordered List
-            line = "(ul)" + line[3:]
-            for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] += 1
         elif re.match(r"^\d+\. ", line): # Ordered List
             match = re.match(r"^\d+\. ", line)
             line = "(ol)" + line[match.end():]
