@@ -1,6 +1,6 @@
 import re
 
-def unescape_markdown(text):
+def unescape_markdown(text, line_escape_pos):
     text = text.replace('\\\\', '\u0000')
     
     replacements = [
@@ -20,7 +20,7 @@ def unescape_markdown(text):
     
     text = text.replace('\u0000', '\\')
     
-    return text
+    return text, line_escape_pos
 
 def parse_markdown(markdown_text):
     lines = markdown_text.splitlines()
@@ -280,7 +280,6 @@ def parse_markdown(markdown_text):
                     if line_escape_pos[j - 1] > start:
                         line_escape_pos[j - 1] += 1
                     
-        
         # Italic
         finished = False
         while not finished:
@@ -327,12 +326,12 @@ def parse_markdown(markdown_text):
                         line_escape_pos[j - 1] += 17
                     elif line_escape_pos[j - 1] > name_start:
                         line_escape_pos[j - 1] += 8
-                
+        
+        line, line_escape_pos = unescape_markdown(line, line_escape_pos)
+        
         escape_positions.append(line_escape_pos)
         lines[i] = line
         i += 1
     markdown_text = "(newline)".join(lines)
-    
-    markdown_text = unescape_markdown(markdown_text)
     
     return markdown_text, escape_positions
