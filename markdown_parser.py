@@ -1,127 +1,5 @@
 import re
 
-def escape_markdown(line, line_escape_pos):
-    line = line.replace('\\\\', '\u0000')
-    
-    # Astericks
-    finished = False
-    while not finished:
-        match = re.search(r"\\\*", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "*" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Backtick
-    finished = False
-    while not finished:
-        match = re.search(r"\\`", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "`" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Open Bracket
-    finished = False
-    while not finished:
-        match = re.search(r"\\\[", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "[" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Closed Bracket
-    finished = False
-    while not finished:
-        match = re.search(r"\\\]", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "]" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Open Parentheses
-    finished = False
-    while not finished:
-        match = re.search(r"\\\(", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "(" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Closed Parentheses
-    finished = False
-    while not finished:
-        match = re.search(r"\\\)", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + ")" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Hashtag
-    finished = False
-    while not finished:
-        match = re.search(r"\\#", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "#" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Hyphen
-    finished = False
-    while not finished:
-        match = re.search(r"\u0000", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "\\" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    # Hyphen
-    finished = False
-    while not finished:
-        match = re.search(r"\\-", line)
-        if not match:
-            finished = True
-        else:
-            start, end = match.span()
-            line = line[:start] + "-" + line[end:]
-            for j in range(len(line_escape_pos)):
-                if line_escape_pos[j - 1] > end:
-                    line_escape_pos[j - 1] -= 1
-    
-    return line, line_escape_pos
-
 def parse_markdown(markdown_text):
     lines = markdown_text.splitlines()
     escape_positions = []    
@@ -130,193 +8,8 @@ def parse_markdown(markdown_text):
     for line in lines:
         # Escape any characters that would be a parsed output
         line_escape_pos = []
-        # (b) - bold
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(b\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\b)" + line[end:]
-                line_escape_pos.append(start + 1)
         
-        # (i) - italic
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(i\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\i)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (ic) - inline code
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(ic\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\ic)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (h1) - Heading 1
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(h1\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\h1)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (h2) - Heading 2
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(h2\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\h2)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (h3) - Heading 3
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(h3\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\h3)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (h4) - Heading 4
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(h4\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\h4)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (h5) - Heading 5
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(h5\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\h5)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (h6) - Heading 6
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(h6\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\h6)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (bq) - Blockquote
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(bq\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\bq)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (ul) - Unordered List
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(ul\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\ul)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (ol) - Ordered List
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(ol\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\ol)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (checked) - Checked Box
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(checked\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\checked)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (unchecked) - Unchecked Box
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(unchecked\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\unchecked)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # Links
-        # (l)
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(l\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\l)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (name)
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(name\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\name)" + line[end:]
-                line_escape_pos.append(start + 1)
-        
-        # (address)
-        finished = False
-        while finished == False:
-            match = re.search(r"(\(address\))", line)
-            if not match:
-                finished = True
-            else:
-                start, end = match.span()
-                line = line[:start] + "(\\address)" + line[end:]
-                line_escape_pos.append(start + 1)
+        line, line_escape_pos = escape_parsed(line, line_escape_pos)
         
         # Parse Markdown
         # Markdown code for the beggining of the line
@@ -435,3 +128,316 @@ def parse_markdown(markdown_text):
     markdown_text = "(newline)".join(lines)
     
     return markdown_text, escape_positions
+
+def escape_parsed(line, line_escape_pos):
+    # (b) - bold
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(b\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\b)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (i) - italic
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(i\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\i)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (ic) - inline code
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(ic\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\ic)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (h1) - Heading 1
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(h1\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\h1)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (h2) - Heading 2
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(h2\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\h2)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (h3) - Heading 3
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(h3\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\h3)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (h4) - Heading 4
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(h4\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\h4)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+        # (h5) - Heading 5
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(h5\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\h5)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (h6) - Heading 6
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(h6\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\h6)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (bq) - Blockquote
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(bq\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\bq)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (ul) - Unordered List
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(ul\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\ul)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (ol) - Ordered List
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(ol\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\ol)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (checked) - Checked Box
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(checked\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\checked)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (unchecked) - Unchecked Box
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(unchecked\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\unchecked)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # Links
+    # (l)
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(l\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\l)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (name)
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(name\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\name)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (address)
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(address\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\address)" + line[end:]
+            line_escape_pos.append(start + 1)
+    
+    return line, line_escape_pos
+
+def escape_markdown(line, line_escape_pos):
+    line = line.replace('\\\\', '\u0000')
+    
+    # Astericks
+    finished = False
+    while not finished:
+        match = re.search(r"\\\*", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "*" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Backtick
+    finished = False
+    while not finished:
+        match = re.search(r"\\`", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "`" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Open Bracket
+    finished = False
+    while not finished:
+        match = re.search(r"\\\[", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "[" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Closed Bracket
+    finished = False
+    while not finished:
+        match = re.search(r"\\\]", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "]" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Open Parentheses
+    finished = False
+    while not finished:
+        match = re.search(r"\\\(", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Closed Parentheses
+    finished = False
+    while not finished:
+        match = re.search(r"\\\)", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + ")" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Hashtag
+    finished = False
+    while not finished:
+        match = re.search(r"\\#", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "#" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Hyphen
+    finished = False
+    while not finished:
+        match = re.search(r"\\-", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "-" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+    
+    # Backslash
+    finished = False
+    while not finished:
+        match = re.search(r"\u0000", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "\\" + line[end:]
+            for j in range(len(line_escape_pos)):
+                if line_escape_pos[j - 1] > end:
+                    line_escape_pos[j - 1] -= 1
+                    
+    return line, line_escape_pos
