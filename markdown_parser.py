@@ -1,6 +1,6 @@
 import re
 
-def unescape_markdown(line, line_escape_pos):
+def escape_markdown(line, line_escape_pos):
     line = line.replace('\\\\', '\u0000')
     
     # Astericks
@@ -427,7 +427,7 @@ def parse_markdown(markdown_text):
                     elif line_escape_pos[j - 1] > name_start:
                         line_escape_pos[j - 1] += 8
         
-        line, line_escape_pos = unescape_markdown(line, line_escape_pos)
+        line, line_escape_pos = escape_markdown(line, line_escape_pos)
         
         escape_positions.append(line_escape_pos)
         lines[i] = line
