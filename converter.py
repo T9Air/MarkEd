@@ -6,6 +6,8 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
     split_text = parsed_text.split("(newline)")
     ordered_list_num = 0
     line_num = 0
+    skip = False
+    codeblock = False
     
     for line in split_text:
         line_escape_pos = escape_positions[line_num]
@@ -45,6 +47,15 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             heading = "r"
             font_size = 14
             bold = ""
+        
+        # Code Block
+        if line.startswith("(cb)"):
+            line = ""
+            skip = True
+            if codeblock == False:
+                codeblock = True
+            else:
+                codeblock = False
         
         # Ordered list
         textbox.tag_configure("ordered", font=("Arial", 14))
@@ -254,6 +265,14 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                 underlines = False
                 tag = "false"
             
+            if codeblock == True:
+                backgrounds = "lightgray"
+                foregrounds = "black"
+                bold = ","
+                italic = ","
+                underlines = False
+                tag = "false"
+            
             # Tag name is a combination of all changes
             tag_name = heading + str(font_size) + bold + italic + "," + backgrounds + "," + foregrounds + "," + tag
             
@@ -268,6 +287,9 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             
             if char_num - 1 not in line_escape_pos:
                 textbox.insert(tk.END, char, tag_name)
-
-        textbox.insert(tk.END, "\n")
+        if skip == False:
+            textbox.insert(tk.END, "\n")
+        else:
+            skip = False
+        
         line_num += 1
