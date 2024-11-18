@@ -4,17 +4,25 @@ from tkinter import messagebox
 from markdown_parser import parse_markdown
 from converter import parsed_to_readable
 import os
-
+import database_host
 # Root window configuration
 root = tk.Tk()
 
 root.title("MarkEd")
 #root.state('zoomed')
-root.configure(bg='gray15')
+
 root.iconbitmap('icon.ico')
 
 
 file_path = ""
+
+color1 = 'gray30'
+color2 = 'gray15'
+if database_host.get_setting('theme') == 'light':
+    color1 = 'gray65'
+    color2 = 'gray80'
+
+root.configure(bg=color2)
 
 # ------------------- Functions -------------------------
 
@@ -78,7 +86,7 @@ class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)
         self.textwidget = None
-        self.configure(bg='gray30', highlightthickness=0)
+        self.configure(bg=color1, highlightthickness=0)
 
     def attach(self, text_widget):
         self.textwidget = text_widget
@@ -107,11 +115,11 @@ class new_tab:
         self.tab_frame = tk.Frame(tabsframe, bg='grey15')
         self.tab_frame.pack(fill='both', expand=True, side='left')
 
-        self.tab_button = tk.Label(self.tab_frame, text='Untitled File', bg='gray15', fg='white', relief='flat')
+        self.tab_button = tk.Label(self.tab_frame, text='Untitled File', bg=color2, fg='white', relief='flat')
         self.tab_button.pack(fill='x', expand=True, side='left')
         self.tab_button.bind('<ButtonPress-1>', self.switch_tab_to_self)
 
-        self.tab_delbutton = tk.Label(self.tab_frame, text='❌', bg='gray15', fg='white', relief='flat')
+        self.tab_delbutton = tk.Label(self.tab_frame, text='❌', bg=color2, fg='white', relief='flat')
         self.tab_delbutton.pack(side='right')
         self.tab_delbutton.bind('<ButtonPress-1>', self.delete_tab)
         self.tab_delbutton.bind('<Enter>', self.switch_to_x)
@@ -161,14 +169,14 @@ class new_tab:
 
 
     def activate(self):
-        self.tab_frame.config(bg='gray30')
-        self.tab_button.config(bg='gray30')
-        self.tab_delbutton.config(bg='gray30')
+        self.tab_frame.config(bg=color1)
+        self.tab_button.config(bg=color1)
+        self.tab_delbutton.config(bg=color1)
 
     def deactivate(self):
-        self.tab_frame.config(bg='gray15')
-        self.tab_button.config(bg='gray15')
-        self.tab_delbutton.config(bg='gray15')
+        self.tab_frame.config(bg=color2)
+        self.tab_button.config(bg=color2)
+        self.tab_delbutton.config(bg=color2)
     
     def delete_tab(self, e=None):
         if self.file_path is None:
@@ -278,7 +286,7 @@ class TabManager:
 
 
 # -------------------- Top Frame --------------------
-top_frame = tk.Frame(root, height=1, bg='gray15')
+top_frame = tk.Frame(root, height=1, bg=color2)
 top_frame.pack(fill='x', padx=10, pady=10)
 
 open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
@@ -289,19 +297,24 @@ save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
 
 
-# -------------------- Tabs Frame --------------------
-global tabsframe
-tabsframe = tk.Frame(root)
-tabsframe.pack(side='top', fill='x')
 
-add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg='gray30', fg='white', relief='solid', overrelief='solid', command=lambda: new_tab(thetab_manager))
-add_new_tabB.pack(fill='x', expand=True, side='left')
 
 # -------------------- Markdown Frame --------------------
-markdown_frame = tk.Frame(root, bg='gray30')
+markdown_frame = tk.Frame(root, bg=color1)
 markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
-markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray15')
+# -------------------- Tabs Frame --------------------
+global tabsframe
+tabsframe = tk.Frame(markdown_frame, height=30, bg=color2)
+tabsframe.pack(side='top', fill='x')
+tabsframe.pack_propagate(False)
+
+add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg=color1, fg='white', relief='flat', overrelief='solid', command=lambda: new_tab(thetab_manager))
+add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
+
+
+# -------------------- Markdown Box --------------------
+markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg=color1, fg='white', selectbackground=color2)
 markdown_box.pack(side='right', fill='both', expand=True)
 
 linenumbers = TextLineNumbers(markdown_frame, width=30)
@@ -320,7 +333,7 @@ markdown_box.linenumbers.redraw()
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg='gray30', fg='white', selectbackground='gray30')
+realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg='white', selectbackground=color1)
 realtext_box.pack(fill='both', expand=True)
 
 
