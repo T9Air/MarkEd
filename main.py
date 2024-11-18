@@ -284,7 +284,26 @@ class TabManager:
     def get_current_tab(self):
         return self.current_tab
 
+def settings_fun():
+    settings_frame = tk.Frame(root, bg=color2)
+    settings_frame.place(relx=.5, rely=.5)
+    set_headerL = tk.Label(settings_frame, text='Settings', font=('Calibri', 20, 'bold'), bg=color2, fg='white')
+    set_headerL.grid(row=0, column=0, columnspan=3)
 
+    set_themeL = tk.Label(settings_frame, text='Theme', font=('Calibri', 15), bg=color2, fg='white')
+    set_themeL.grid(row=1, column=0, pady=10)
+
+    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg='white', command=lambda: database_host.setting_configure('theme', 'light'))
+    set_themelightB.grid(row=1, column=1, pady=10)
+
+    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg='white', command=lambda: database_host.setting_configure('theme', 'dark'))
+    set_themedarkB.grid(row=1, column=2, pady=10)
+
+    set_headerL = tk.Label(settings_frame, text='See changes upon reopening', font=('Calibri', 10), bg=color2, fg='white')
+    set_headerL.grid(row=2, column=0, columnspan=3)
+
+    set_close = tk.Button(settings_frame, text='Close Settings', font=('Calibri', 10), bg=color2, fg='white', command=lambda: settings_frame.destroy())
+    set_close.grid(row=3, column=0, pady=10, columnspan=3)
 # -------------------- Top Frame --------------------
 top_frame = tk.Frame(root, height=1, bg=color2)
 top_frame.pack(fill='x', padx=10, pady=10)
@@ -295,7 +314,11 @@ open_btn.grid(row=0, column=0, padx=5, sticky='w')
 save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief='flat', overrelief='solid')
 save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
-
+settingsB = tk.Button(top_frame, text="\u2699 Settings", height=1, relief='flat', overrelief='solid', command=settings_fun)
+top_frame.grid_columnconfigure(0, weight=0)
+top_frame.grid_columnconfigure(1, weight=0)
+top_frame.grid_columnconfigure(2, weight=1)
+settingsB.grid(row=0, column=2, padx=5, sticky='e')
 
 
 
