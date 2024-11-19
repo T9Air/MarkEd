@@ -64,15 +64,7 @@ Create links using the `[text](url)` syntax:
 - Example: `[MarkEd Repository](https://github.com/T9Air/MarkEd)`
 - Result: [MarkEd Repository](https://github.com/T9Air/MarkEd)
 
-## Code
-
-### Inline Code
-
-Add inline code using this syntax: \`code\` : `code`
-
-> NOTE: The editor does not parse inline code perfectly, but I plan on improving that in the future
-
-### Code Blocks
+## Code Blocks
 
 Add code blocks by having 3 backticks on one line: ```, followed by another 3 on a different line
 
@@ -93,4 +85,4 @@ To display any markdown characters as plain text, use a backslash before it:
 - `\)` for )
 - `\-` for -
 - `\\` for \
-- \\\` for `
+- `` \` `` for `
