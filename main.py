@@ -286,27 +286,39 @@ class TabManager:
     def get_current_tab(self):
         return self.current_tab
 
+def update_themebuttons():
+    if database_host.get_setting('theme') == 'dark':
+        set_themedarkB.configure(relief='solid', font=('Calibri', 15, 'bold'))
+        set_themelightB.configure(relief='flat', font=('Calibri', 15))
+    if database_host.get_setting('theme') == 'light':
+        set_themelightB.configure(relief='solid', font=('Calibri', 15, 'bold'))
+        set_themedarkB.configure(relief='flat', font=('Calibri', 15))
 def settings_fun():
+    global set_themedarkB, set_themelightB
     settings_frame = tk.Frame(root, bg=color2)
     settings_frame.place(relx=.5, rely=.5)
     set_headerL = tk.Label(settings_frame, text='Settings', font=('Calibri', 20, 'bold'), bg=color2, fg=color3)
     set_headerL.grid(row=0, column=0, columnspan=3)
 
-    set_themeL = tk.Label(settings_frame, text='Theme', font=('Calibri', 15), bg=color2, fg=color3)
+    set_themeL = tk.Label(settings_frame, text='Theme', font=('Calibri', 15, 'bold'), bg=color2, fg=color3)
     set_themeL.grid(row=1, column=0, pady=10)
 
-    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg=color3, command=lambda: database_host.setting_configure('theme', 'light'))
-    set_themelightB.grid(row=1, column=1, pady=10)
+    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg=color3, relief='flat', overrelief='solid', command=lambda: (database_host.setting_configure('theme', 'light'), update_themebuttons()))
+    set_themelightB.grid(row=1, column=1, pady=10, padx=5)
+    if database_host.get_setting('theme') == 'light':
+        set_themelightB.configure(relief='solid', font=('Calibri', 15, 'bold'))
 
-    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg=color3, command=lambda: database_host.setting_configure('theme', 'dark'))
-    set_themedarkB.grid(row=1, column=2, pady=10)
+    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg=color3, relief='flat', overrelief='solid', command=lambda: (database_host.setting_configure('theme', 'dark'), update_themebuttons()))
+    set_themedarkB.grid(row=1, column=2, pady=10, padx=5)
+    if database_host.get_setting('theme') == 'dark':
+        set_themedarkB.configure(relief='solid', font=('Calibri', 15, 'bold'))
 
     set_headerL = tk.Label(settings_frame, text='See changes upon reopening', font=('Calibri', 10), bg=color2, fg=color3)
     set_headerL.grid(row=2, column=0, columnspan=3)
 
     set_close = tk.Button(settings_frame, text='Close Settings', font=('Calibri', 10), bg=color2, fg=color3, command=lambda: settings_frame.destroy())
     set_close.grid(row=3, column=0, pady=10, columnspan=3)
-# -------------------- Top Frame --------------------
+# -------------------- Top Frame -------------------- 
 top_frame = tk.Frame(root, height=1, bg=color2)
 top_frame.pack(fill='x', padx=10, pady=10)
 
@@ -339,7 +351,7 @@ add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
 
 
 # -------------------- Markdown Box --------------------
-markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2)
+markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2)
 markdown_box.pack(side='right', fill='both', expand=True)
 
 linenumbers = TextLineNumbers(markdown_frame, width=30)
