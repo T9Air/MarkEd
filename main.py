@@ -16,9 +16,11 @@ file_path = ""
 
 color1 = 'gray30'
 color2 = 'gray15'
+color3 = 'white'
 if database_host.get_setting('theme') == 'light':
-    color1 = 'gray65'
-    color2 = 'gray80'
+    color1 = 'gray85'
+    color2 = 'gray70'
+    color3 = 'black'
 
 root.configure(bg=color2)
 
@@ -100,7 +102,7 @@ class TextLineNumbers(tk.Canvas):
             if dline is None: break
             y = dline[1]
             linenum = str(i).split(".")[0]
-            self.create_text(2, y, anchor="nw", text=linenum, fill='white')
+            self.create_text(2, y, anchor="nw", text=linenum, fill=color3)
             i = self.textwidget.index("%s+1line" % i)
 
 
@@ -115,11 +117,11 @@ class new_tab:
         self.tab_frame = tk.Frame(tabsframe, bg='grey15')
         self.tab_frame.pack(fill='both', expand=True, side='left')
 
-        self.tab_button = tk.Label(self.tab_frame, text='Untitled File', bg=color2, fg='white', relief='flat')
+        self.tab_button = tk.Label(self.tab_frame, text='Untitled File', bg=color2, fg=color3, relief='flat')
         self.tab_button.pack(fill='x', expand=True, side='left')
         self.tab_button.bind('<ButtonPress-1>', self.switch_tab_to_self)
 
-        self.tab_delbutton = tk.Label(self.tab_frame, text='❌', bg=color2, fg='white', relief='flat')
+        self.tab_delbutton = tk.Label(self.tab_frame, text='❌', bg=color2, fg=color3, relief='flat')
         self.tab_delbutton.pack(side='right')
         self.tab_delbutton.bind('<ButtonPress-1>', self.delete_tab)
         self.tab_delbutton.bind('<Enter>', self.switch_to_x)
@@ -153,7 +155,7 @@ class new_tab:
     def update_saved(self, e):        
         if self.file_path is None:
             self.tab_delbutton.config(state='normal')
-            if markdown_box.get(1.0, tk.END).strip() != "":
+            if self.textoftab.strip() != "":
                 self.tab_delbutton.config(text='\u2B24')
             else:
                 self.tab_delbutton.config(text='❌')
@@ -287,22 +289,22 @@ class TabManager:
 def settings_fun():
     settings_frame = tk.Frame(root, bg=color2)
     settings_frame.place(relx=.5, rely=.5)
-    set_headerL = tk.Label(settings_frame, text='Settings', font=('Calibri', 20, 'bold'), bg=color2, fg='white')
+    set_headerL = tk.Label(settings_frame, text='Settings', font=('Calibri', 20, 'bold'), bg=color2, fg=color3)
     set_headerL.grid(row=0, column=0, columnspan=3)
 
-    set_themeL = tk.Label(settings_frame, text='Theme', font=('Calibri', 15), bg=color2, fg='white')
+    set_themeL = tk.Label(settings_frame, text='Theme', font=('Calibri', 15), bg=color2, fg=color3)
     set_themeL.grid(row=1, column=0, pady=10)
 
-    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg='white', command=lambda: database_host.setting_configure('theme', 'light'))
+    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg=color3, command=lambda: database_host.setting_configure('theme', 'light'))
     set_themelightB.grid(row=1, column=1, pady=10)
 
-    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg='white', command=lambda: database_host.setting_configure('theme', 'dark'))
+    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg=color3, command=lambda: database_host.setting_configure('theme', 'dark'))
     set_themedarkB.grid(row=1, column=2, pady=10)
 
-    set_headerL = tk.Label(settings_frame, text='See changes upon reopening', font=('Calibri', 10), bg=color2, fg='white')
+    set_headerL = tk.Label(settings_frame, text='See changes upon reopening', font=('Calibri', 10), bg=color2, fg=color3)
     set_headerL.grid(row=2, column=0, columnspan=3)
 
-    set_close = tk.Button(settings_frame, text='Close Settings', font=('Calibri', 10), bg=color2, fg='white', command=lambda: settings_frame.destroy())
+    set_close = tk.Button(settings_frame, text='Close Settings', font=('Calibri', 10), bg=color2, fg=color3, command=lambda: settings_frame.destroy())
     set_close.grid(row=3, column=0, pady=10, columnspan=3)
 # -------------------- Top Frame --------------------
 top_frame = tk.Frame(root, height=1, bg=color2)
@@ -332,12 +334,12 @@ tabsframe = tk.Frame(markdown_frame, height=30, bg=color2)
 tabsframe.pack(side='top', fill='x')
 tabsframe.pack_propagate(False)
 
-add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg=color1, fg='white', relief='flat', overrelief='solid', command=lambda: new_tab(thetab_manager))
+add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg=color1, fg=color3, relief='flat', overrelief='solid', command=lambda: new_tab(thetab_manager))
 add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
 
 
 # -------------------- Markdown Box --------------------
-markdown_box = CustomText(markdown_frame, insertbackground='white', insertwidth=1, height=30, width=90, yscrollcommand=True, bg=color1, fg='white', selectbackground=color2)
+markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2)
 markdown_box.pack(side='right', fill='both', expand=True)
 
 linenumbers = TextLineNumbers(markdown_frame, width=30)
@@ -356,7 +358,7 @@ markdown_box.linenumbers.redraw()
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg='white', selectbackground=color1)
+realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
 realtext_box.pack(fill='both', expand=True)
 
 
