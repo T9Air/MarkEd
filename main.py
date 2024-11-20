@@ -26,7 +26,7 @@ root.configure(bg=color2)
 
 # ------------------- Functions -------------------------
 
-def save():
+def save(e=None):
     current_tab = thetab_manager.get_current_tab()
     if not current_tab.file_path:
         current_tab.file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
@@ -39,7 +39,7 @@ def save():
     #current_tab.file_path = file_path
     current_tab.rename(renameto=os.path.basename(current_tab.file_path))
     current_tab.update_saved('')
-def open_file():
+def open_file(e=None):
     global file_path
     open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
     
@@ -381,7 +381,9 @@ global thetab_manager
 thetab_manager = TabManager()
 new_tab(thetab_manager)
 
-
+# -------------------- Bindings -----------------------------------
+root.bind('<Control-s>', save)
+root.bind('<Control-o>', open_file)
 
 # -------------------- Mainloop --------------------
 root.mainloop()
