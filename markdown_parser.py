@@ -8,10 +8,29 @@ def parse_markdown(markdown_text):
     for line in lines:
         # Escape any characters that would be a parsed output
         line_escape_pos = []
-        
         line, line_escape_pos = escape_parsed(line, line_escape_pos)
         
-        # Parse Markdown
+        escape_positions.append(line_escape_pos)
+        lines[i] = line
+        i += 1
+    
+    i = 0
+    codeblock = -1
+    for line in lines:
+        if line.startswith("```"):
+            if codeblock == -1:
+                codeblock = i
+            else:
+                lines[codeblock] = "(cb)"
+                lines[i] = "(cb)"
+                escape_positions[codeblock] = []
+                escape_positions[i] = []
+                codeblock = -1
+        i += 1
+
+    i = 0
+    for line in lines:
+        line_escape_pos = escape_positions[i]
         # Markdown code for the beggining of the line
         if line.startswith("###### "): # Heading 6
             line = "(h6)" + line[7:]
@@ -39,18 +58,18 @@ def parse_markdown(markdown_text):
             line = "(bq)" + line[2:]
             for j in range(len(line_escape_pos)):
                 line_escape_pos[j - 1] += 2
-        elif line.startswith(" - [x] "): # Checked Box
-            line = "(checked)" + line[7:]
+        elif line.startswith("- [x] "): # Checked Box
+            line = "(checked)" + line[6:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] += 3
+        elif line.startswith("- [ ] "): # Unchecked Box
+            line = "(unchecked)" + line[6:]
+            for j in range(len(line_escape_pos)):
+                line_escape_pos[j - 1] += 5
+        elif line.startswith("- "): # Unordered List
+            line = "(ul)" + line[2:]
             for j in range(len(line_escape_pos)):
                 line_escape_pos[j - 1] += 2
-        elif line.startswith(" - [ ] "): # Unchecked Box
-            line = "(unchecked)" + line[7:]
-            for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] += 4
-        elif line.startswith(" - "): # Unordered List
-            line = "(ul)" + line[3:]
-            for j in range(len(line_escape_pos)):
-                line_escape_pos[j - 1] += 1
         elif re.match(r"^\d+\. ", line): # Ordered List
             match = re.match(r"^\d+\. ", line)
             line = "(ol)" + line[match.end():]
@@ -122,7 +141,7 @@ def parse_markdown(markdown_text):
         
         line, line_escape_pos = escape_markdown(line, line_escape_pos)
         
-        escape_positions.append(line_escape_pos)
+        escape_positions[i] = line_escape_pos
         lines[i] = line
         i += 1
     markdown_text = "(newline)".join(lines)
@@ -130,7 +149,7 @@ def parse_markdown(markdown_text):
     return markdown_text, escape_positions
 
 def escape_parsed(line, line_escape_pos):
-    # (b) - bold
+    # (b) - Bold
     finished = False
     while finished == False:
         match = re.search(r"(\(b\))", line)
@@ -141,7 +160,7 @@ def escape_parsed(line, line_escape_pos):
             line = line[:start] + "(\\b)" + line[end:]
             line_escape_pos.append(start + 1)
         
-    # (i) - italic
+    # (i) - Italic
     finished = False
     while finished == False:
         match = re.search(r"(\(i\))", line)
@@ -152,7 +171,7 @@ def escape_parsed(line, line_escape_pos):
             line = line[:start] + "(\\i)" + line[end:]
             line_escape_pos.append(start + 1)
         
-    # (ic) - inline code
+    # (ic) - Inline Code
     finished = False
     while finished == False:
         match = re.search(r"(\(ic\))", line)
@@ -161,6 +180,17 @@ def escape_parsed(line, line_escape_pos):
         else:
             start, end = match.span()
             line = line[:start] + "(\\ic)" + line[end:]
+            line_escape_pos.append(start + 1)
+        
+    # (cb) - Code Block
+    finished = False
+    while finished == False:
+        match = re.search(r"(\(cb\))", line)
+        if not match:
+            finished = True
+        else:
+            start, end = match.span()
+            line = line[:start] + "(\\cb)" + line[end:]
             line_escape_pos.append(start + 1)
         
     # (h1) - Heading 1
