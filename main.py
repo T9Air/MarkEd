@@ -104,7 +104,7 @@ class TextLineNumbers(tk.Canvas):
             linenum = str(i).split(".")[0]
             self.create_text(2, y, anchor="nw", text=linenum, fill=color3)
             i = self.textwidget.index("%s+1line" % i)
-
+            self.configure(bg=color1, highlightthickness=0)
 
 class new_tab:
     def __init__(self, tab_manager):
@@ -172,13 +172,13 @@ class new_tab:
 
     def activate(self):
         self.tab_frame.config(bg=color1)
-        self.tab_button.config(bg=color1)
-        self.tab_delbutton.config(bg=color1)
+        self.tab_button.config(bg=color1, fg=color3)
+        self.tab_delbutton.config(bg=color1, fg=color3)
 
     def deactivate(self):
         self.tab_frame.config(bg=color2)
-        self.tab_button.config(bg=color2)
-        self.tab_delbutton.config(bg=color2)
+        self.tab_button.config(bg=color2, fg=color3)
+        self.tab_delbutton.config(bg=color2, fg=color3)
     
     def delete_tab(self, e=None):
         if self.file_path is None:
@@ -285,6 +285,11 @@ class TabManager:
         tab.activate()
     def get_current_tab(self):
         return self.current_tab
+    def reset_tab_colors(self):
+        for tab in self.tabs:
+            tab.deactivate()
+            if self.current_tab:
+                self.current_tab.activate()
 
 def update_themebuttons():
     if database_host.get_setting('theme') == 'dark':
@@ -294,7 +299,7 @@ def update_themebuttons():
         set_themelightB.configure(relief='solid', font=('Calibri', 15, 'bold'))
         set_themedarkB.configure(relief='flat', font=('Calibri', 15))
 def settings_fun():
-    global set_themedarkB, set_themelightB
+    global settings_frame, set_themedarkB, set_themelightB, set_headerL, set_themeL
     settings_frame = tk.Frame(root, bg=color2)
     settings_frame.place(relx=.5, rely=.5)
     set_headerL = tk.Label(settings_frame, text='Settings', font=('Calibri', 20, 'bold'), bg=color2, fg=color3)
@@ -303,23 +308,62 @@ def settings_fun():
     set_themeL = tk.Label(settings_frame, text='Theme', font=('Calibri', 15, 'bold'), bg=color2, fg=color3)
     set_themeL.grid(row=1, column=0, pady=10)
 
-    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg=color3, relief='flat', overrelief='solid', command=lambda: (database_host.setting_configure('theme', 'light'), update_themebuttons()))
+    set_themelightB = tk.Button(settings_frame, text='Light Theme', font=('Calibri', 15), bg=color2, fg=color3, relief='flat', overrelief='solid', command=lambda: (database_host.setting_configure('theme', 'light'), update_themebuttons(), update_theme()))
     set_themelightB.grid(row=1, column=1, pady=10, padx=5)
     if database_host.get_setting('theme') == 'light':
         set_themelightB.configure(relief='solid', font=('Calibri', 15, 'bold'))
 
-    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg=color3, relief='flat', overrelief='solid', command=lambda: (database_host.setting_configure('theme', 'dark'), update_themebuttons()))
+    set_themedarkB = tk.Button(settings_frame, text='Dark Theme', font=('Calibri', 15), bg=color2, fg=color3, relief='flat', overrelief='solid', command=lambda: (database_host.setting_configure('theme', 'dark'), update_themebuttons(), update_theme()))
     set_themedarkB.grid(row=1, column=2, pady=10, padx=5)
     if database_host.get_setting('theme') == 'dark':
         set_themedarkB.configure(relief='solid', font=('Calibri', 15, 'bold'))
 
     set_headerL = tk.Label(settings_frame, text='See changes upon reopening', font=('Calibri', 10), bg=color2, fg=color3)
-    set_headerL.grid(row=2, column=0, columnspan=3)
+    #set_headerL.grid(row=2, column=0, columnspan=3)
 
     set_close = tk.Button(settings_frame, text='Close Settings', font=('Calibri', 10), bg=color2, fg=color3, command=lambda: settings_frame.destroy())
     set_close.grid(row=3, column=0, pady=10, columnspan=3)
 
-# -------------------- Top Frame -------------------- 
+def update_theme():
+    global color1, color2, color3
+    color1 = 'gray30'
+    color2 = 'gray15'
+    color3 = 'white'
+    if database_host.get_setting('theme') == 'light':
+        color1 = 'gray85'
+        color2 = 'gray70'
+        color3 = 'black'
+
+    # Root
+    root.configure(bg=color2)
+    # Settings
+    settings_frame.configure(bg=color2)
+    set_themedarkB.configure(bg=color2, fg=color3)
+    set_themelightB.configure(bg=color2, fg=color3)
+    set_headerL.configure(bg=color2, fg=color3)
+    set_themeL.configure(bg=color2, fg=color3)
+    # Top Frame
+    top_frame.configure(bg=color2)
+    # Markdown Frame
+    markdown_frame.configure(bg=color2)
+    # Tabs Frame
+    tabsframe.configure(bg=color2)
+    add_new_tabB.configure(bg=color1, fg=color3)
+    # Markdown Box
+    markdown_frame.configure(bg=color1)
+    markdown_box.configure(insertbackground=color3, bg=color1, fg=color3, selectbackground=color2)
+    linenumbers.redraw()
+    # Real text
+    realtext_box.configure(bg=color1, fg=color3, selectbackground=color1)
+    # Tabs
+    thetab_manager.reset_tab_colors()
+
+
+
+
+    
+# -------------------- Top Frame --------------------
+global top_frame
 top_frame = tk.Frame(root, height=1, bg=color2)
 top_frame.pack(fill='x', padx=10, pady=10)
 
@@ -338,11 +382,12 @@ settingsB.grid(row=0, column=2, padx=5, sticky='e')
 
 
 # -------------------- Markdown Frame --------------------
+global markdown_frame
 markdown_frame = tk.Frame(root, bg=color1)
 markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
 # -------------------- Tabs Frame --------------------
-global tabsframe
+global tabsframe, add_new_tabB
 tabsframe = tk.Frame(markdown_frame, height=30, bg=color2)
 tabsframe.pack(side='top', fill='x')
 tabsframe.pack_propagate(False)
@@ -352,6 +397,7 @@ add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
 
 
 # -------------------- Markdown Box --------------------
+global markdown_box, linenumbers
 markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
 markdown_box.pack(side='right', fill='both', expand=True)
 
@@ -368,6 +414,7 @@ markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
 markdown_box.linenumbers.redraw()
 
 # -------------------- Realtext frame --------------------
+global realtext_frame, realtext_box
 realtext_frame = tk.Frame(root)
 realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
