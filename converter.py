@@ -1,6 +1,14 @@
 import re
-
+import database_host
 import tkinter as tk
+
+color1 = 'gray30'
+color2 = 'gray15'
+color3 = 'white'
+if database_host.get_setting('theme') == 'light':
+    color1 = 'gray85'
+    color2 = 'gray70'
+    color3 = 'black'
 
 def parsed_to_readable(parsed_text, escape_positions, textbox):
     split_text = parsed_text.split("(newline)")
@@ -231,11 +239,6 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         for char in line:
             char_num = char_num + 1
             
-            if char_num in inlinecode_characters:
-                backgrounds = "lightgray"
-            else:
-                backgrounds = "white"
-            
             if char_num in bold_characters or heading == "h":
                 bold = ",bold"
             else:
@@ -247,21 +250,21 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                 italic = ","
             
             if char_num in inlinecode_characters:
-                backgrounds = "lightgray"
+                backgrounds = "gray45"
                 if heading == "r":
                     bold = ","
                 else:
                     bold = ",bold"
                 italic = ","
             else:
-                backgrounds = "white"
+                backgrounds = color1
             
             if char_num in link_characters:
-                foregrounds = "blue"
+                foregrounds = "#0291E3"
                 underlines = True
                 tag = "true"
             else:
-                foregrounds = "black"
+                foregrounds = color3
                 underlines = False
                 tag = "false"
             
