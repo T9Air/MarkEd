@@ -388,19 +388,32 @@ def setup_ui():
     add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
 
     # Markdown Box
-    markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
+    '''markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
     markdown_box.pack(side='right', fill='both', expand=True)
 
     linenumbers = TextLineNumbers(markdown_frame, width=30)
     linenumbers.attach(markdown_box)
-    linenumbers.pack(side='left', fill='y')
+    linenumbers.pack(side='left', fill='y')'''
 
-    # Markdown Box Bindings
+    # -------------------- Markdown Box --------------------
+    global markdown_box, linenumbers
+    markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
+    linenumbers = TextLineNumbers(markdown_frame, width=30)
+    linenumbers.attach(markdown_box)
+    linenumbers.pack(side='left', fill='y')
+    markdown_box.pack(side='left', fill='both', expand=True)
+
+    scrollbar = tk.Scrollbar(markdown_frame, command=markdown_box.yview, bg=color2)
+    scrollbar.pack(side='right', fill='y', expand=True)
+    markdown_box.config(yscrollcommand=scrollbar.set)
+
+        # >> Markdown Box Bindings <<
     markdown_box.bind("<KeyPress>", update_text, add="+")
     markdown_box.attach(linenumbers)
     markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
     markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
-    markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
+    markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers, add='+')
+    scrollbar.bind("<B1-Motion>", markdown_box.redraw_line_numbers, add='+')
     markdown_box.linenumbers.redraw()
 
     # Realtext frame
