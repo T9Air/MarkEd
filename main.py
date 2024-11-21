@@ -399,7 +399,7 @@ def setup_ui():
     markdown_box.pack(side='left', fill='both', expand=True)
 
     scrollbar = tk.Scrollbar(markdown_frame, command=markdown_box.yview, bg=color2)
-    scrollbar.pack(side='right', fill='y', expand=True)
+    scrollbar.pack(side='right', fill='y')
     markdown_box.config(yscrollcommand=scrollbar.set)
 
         # >> Markdown Box Bindings <<
@@ -420,7 +420,7 @@ def setup_ui():
     realtext_box.pack(side='left', fill='both', expand=True)
 
     realscrollbar = tk.Scrollbar(realtext_frame, command=realtext_box.yview, bg=color2)
-    realscrollbar.pack(side='right', fill='y', expand=True)
+    realscrollbar.pack(side='right', fill='y')
     realtext_box.config(yscrollcommand=realscrollbar.set)
 
     # Initialize Tab Manager
