@@ -338,6 +338,10 @@ def update_theme():
     update_convtheme()
     update_text()
 
+def toggle_maximized(event=None):
+    root.state('zoomed' if root.state() != 'zoomed' else 'normal')
+    if root.state() != 'zoomed':
+        root.geometry('1200x700')  # fallback size when unmaximized
 
 def setup_ui():
     global root, top_frame, markdown_frame, tabsframe, add_new_tabB
@@ -361,6 +365,7 @@ def setup_ui():
     root.title("MarkEd")
     root.iconbitmap('icon.ico')
     root.configure(bg=color2)
+    root.state('zoomed')  # Start maximized instead of fullscreen
 
     # Top Frame
     top_frame = tk.Frame(root, height=1, bg=color2)
@@ -392,7 +397,7 @@ def setup_ui():
 
     # -------------------- Markdown Box --------------------
     global markdown_box, linenumbers
-    markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
+    markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=15, width=45, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
     linenumbers = TextLineNumbers(markdown_frame, width=30)
     linenumbers.attach(markdown_box)
     linenumbers.pack(side='left', fill='y')
@@ -416,7 +421,7 @@ def setup_ui():
     realtext_frame = tk.Frame(root)
     realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-    realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
+    realtext_box = tk.Text(realtext_frame, height=15, width=45, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
     realtext_box.pack(side='left', fill='both', expand=True)
 
     realscrollbar = tk.Scrollbar(realtext_frame, command=realtext_box.yview, bg=color2)
@@ -430,6 +435,8 @@ def setup_ui():
     # Global Bindings
     root.bind('<Control-s>', save)
     root.bind('<Control-o>', open_file)
+    root.bind('<F11>', toggle_maximized)  # Toggle maximize instead of fullscreen
+    root.bind('<Escape>', lambda e: root.attributes('-fullscreen', False))  # Exit fullscreen with Escape
 
 def main():
     """Main function to initialize and run the Markdown editor application."""
