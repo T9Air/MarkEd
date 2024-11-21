@@ -259,6 +259,10 @@ def open_file(e=None):
 
 def update_text(event=None):
     def delayed_update():
+        # Get first visible line and its position before updating
+        first_visible = realtext_box.index("@0,0")
+        current_pos = realtext_box.yview()
+        
         realtext_box.config(state="normal")
         realtext_box.delete(1.0, tk.END)
         markdown_text = markdown_box.get(0.0, tk.END)
@@ -267,6 +271,11 @@ def update_text(event=None):
         parsed_to_readable(parsed_text, escape_positions, realtext_box)
         
         realtext_box.config(state="disabled")
+        
+        # Restore view to same relative position
+        realtext_box.yview_moveto(current_pos[0])
+        realtext_box.see(first_visible)
+        
     root.after(1, delayed_update)
 
 def update_themebuttons():
