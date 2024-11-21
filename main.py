@@ -338,7 +338,7 @@ def update_theme():
 
 def setup_ui():
     global root, top_frame, markdown_frame, tabsframe, add_new_tabB
-    global markdown_box, linenumbers, realtext_frame, realtext_box, thetab_manager
+    global markdown_box, linenumbers, realtext_frame, realtext_box, thetab_manager, scrollbar, realscrollbar
     global color1, color2, color3, file_path
 
     # Initialize colors based on theme
@@ -387,14 +387,6 @@ def setup_ui():
     add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg=color1, fg=color3, relief='flat', overrelief='solid', command=lambda: new_tab(thetab_manager))
     add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
 
-    # Markdown Box
-    '''markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
-    markdown_box.pack(side='right', fill='both', expand=True)
-
-    linenumbers = TextLineNumbers(markdown_frame, width=30)
-    linenumbers.attach(markdown_box)
-    linenumbers.pack(side='left', fill='y')'''
-
     # -------------------- Markdown Box --------------------
     global markdown_box, linenumbers
     markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
@@ -416,12 +408,17 @@ def setup_ui():
     scrollbar.bind("<B1-Motion>", markdown_box.redraw_line_numbers, add='+')
     markdown_box.linenumbers.redraw()
 
+
     # Realtext frame
     realtext_frame = tk.Frame(root)
     realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
     realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
-    realtext_box.pack(fill='both', expand=True)
+    realtext_box.pack(side='left', fill='both', expand=True)
+
+    realscrollbar = tk.Scrollbar(realtext_frame, command=realtext_box.yview, bg=color2)
+    realscrollbar.pack(side='right', fill='y', expand=True)
+    realtext_box.config(yscrollcommand=realscrollbar.set)
 
     # Initialize Tab Manager
     thetab_manager = TabManager()
