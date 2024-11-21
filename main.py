@@ -5,74 +5,6 @@ from markdown_parser import parse_markdown
 from converter import parsed_to_readable
 import os
 import database_host
-# Root window configuration
-root = tk.Tk()
-
-root.title("MarkEd")
-
-root.iconbitmap('icon.ico')
-
-file_path = ""
-
-color1 = 'gray30'
-color2 = 'gray15'
-color3 = 'white'
-if database_host.get_setting('theme') == 'light':
-    color1 = 'gray85'
-    color2 = 'gray70'
-    color3 = 'black'
-
-root.configure(bg=color2)
-
-# ------------------- Functions -------------------------
-
-def save(e=None):
-    current_tab = thetab_manager.get_current_tab()
-    if not current_tab.file_path:
-        current_tab.file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
-        if not current_tab.file_path:
-            return
-    text = markdown_box.get(1.0, tk.END)
-    with open(current_tab.file_path, "w") as file:
-        file.write(text)
-    root.update()
-    #current_tab.file_path = file_path
-    current_tab.rename(renameto=os.path.basename(current_tab.file_path))
-    current_tab.update_saved('')
-def open_file(e=None):
-    global file_path
-    open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
-    
-    if open_file_path:
-        openfiletab = new_tab(thetab_manager)
-        with open(open_file_path, "r") as file:
-            text = file.read()
-            markdown_box.delete(1.0, tk.END)
-            markdown_box.insert(tk.END, text)
-            realtext_box.config(state="normal")
-            realtext_box.delete(1.0, tk.END)
-            parsed_text, escape_positions = parse_markdown(text)
-            parsed_to_readable(parsed_text, escape_positions, realtext_box)
-
-            realtext_box.config(state="disabled")
-        file_path = open_file_path
-        openfiletab.textoftab = text
-        openfiletab.file_path = open_file_path
-        openfiletab.rename(renameto=os.path.basename(open_file_path))
-
-
-def update_text(event=None):
-    def delayed_update():
-        realtext_box.config(state="normal")
-        realtext_box.delete(1.0, tk.END)
-        markdown_text = markdown_box.get(0.0, tk.END)
-        
-        parsed_text, escape_positions = parse_markdown(markdown_text)
-        parsed_to_readable(parsed_text, escape_positions, realtext_box)
-        
-        realtext_box.config(state="disabled")
-    root.after(1, delayed_update)
-
 
 class CustomText(tk.Text):
     def __init__(self, *args, **kwargs):
@@ -84,6 +16,7 @@ class CustomText(tk.Text):
 
     def redraw_line_numbers(self, *args):
         self.linenumbers.redraw()
+
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)
@@ -127,7 +60,6 @@ class new_tab:
         self.tab_delbutton.bind('<Enter>', self.switch_to_x)
         self.tab_delbutton.bind('<Leave>', self.update_saved)
 
-
         self.tab_manager.register_tab(self)
         self.update_delete_buttons()
 
@@ -137,6 +69,7 @@ class new_tab:
 
     def rename(self, renameto):
         self.tab_button.config(text=renameto)
+
     def switch_to_x(self, e):
         self.tab_delbutton.config(text='❌')
 
@@ -167,8 +100,6 @@ class new_tab:
                 self.tab_delbutton.config(text='\u2B24')
             else:
                 self.tab_delbutton.config(text='❌')
-
-
 
     def activate(self):
         self.tab_frame.config(bg=color1)
@@ -251,7 +182,6 @@ class new_tab:
                 markdown_box.redraw_line_numbers()
                 if len(self.tab_manager.tabs) == 0:
                     new_tab(thetab_manager)
-        
 
     def update_var(self, e):
         global markdown_box
@@ -263,6 +193,7 @@ class new_tab:
                 tab.tab_delbutton.config(state='normal')
             else:
                 tab.tab_delbutton.config(state='normal')
+
 class TabManager:
     def __init__(self):
         self.tabs = []
@@ -283,13 +214,60 @@ class TabManager:
         for t in self.tabs:
             t.deactivate()
         tab.activate()
+
     def get_current_tab(self):
         return self.current_tab
+
     def reset_tab_colors(self):
         for tab in self.tabs:
             tab.deactivate()
             if self.current_tab:
                 self.current_tab.activate()
+
+def save(e=None):
+    current_tab = thetab_manager.get_current_tab()
+    if not current_tab.file_path:
+        current_tab.file_path = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
+        if not current_tab.file_path:
+            return
+    text = markdown_box.get(1.0, tk.END)
+    with open(current_tab.file_path, "w") as file:
+        file.write(text)
+    root.update()
+    current_tab.rename(renameto=os.path.basename(current_tab.file_path))
+    current_tab.update_saved('')
+
+def open_file(e=None):
+    global file_path
+    open_file_path = filedialog.askopenfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
+    
+    if open_file_path:
+        openfiletab = new_tab(thetab_manager)
+        with open(open_file_path, "r") as file:
+            text = file.read()
+            markdown_box.delete(1.0, tk.END)
+            markdown_box.insert(tk.END, text)
+            realtext_box.config(state="normal")
+            realtext_box.delete(1.0, tk.END)
+            parsed_text, escape_positions = parse_markdown(text)
+            parsed_to_readable(parsed_text, escape_positions, realtext_box)
+            realtext_box.config(state="disabled")
+        file_path = open_file_path
+        openfiletab.textoftab = text
+        openfiletab.file_path = open_file_path
+        openfiletab.rename(renameto=os.path.basename(open_file_path))
+
+def update_text(event=None):
+    def delayed_update():
+        realtext_box.config(state="normal")
+        realtext_box.delete(1.0, tk.END)
+        markdown_text = markdown_box.get(0.0, tk.END)
+        
+        parsed_text, escape_positions = parse_markdown(markdown_text)
+        parsed_to_readable(parsed_text, escape_positions, realtext_box)
+        
+        realtext_box.config(state="disabled")
+    root.after(1, delayed_update)
 
 def update_themebuttons():
     if database_host.get_setting('theme') == 'dark':
@@ -298,6 +276,7 @@ def update_themebuttons():
     if database_host.get_setting('theme') == 'light':
         set_themelightB.configure(relief='solid', font=('Calibri', 15, 'bold'))
         set_themedarkB.configure(relief='flat', font=('Calibri', 15))
+
 def settings_fun():
     global settings_frame, set_themedarkB, set_themelightB, set_headerL, set_themeL
     settings_frame = tk.Frame(root, bg=color2)
@@ -319,7 +298,6 @@ def settings_fun():
         set_themedarkB.configure(relief='solid', font=('Calibri', 15, 'bold'))
 
     set_headerL = tk.Label(settings_frame, text='See changes upon reopening', font=('Calibri', 10), bg=color2, fg=color3)
-    #set_headerL.grid(row=2, column=0, columnspan=3)
 
     set_close = tk.Button(settings_frame, text='Close Settings', font=('Calibri', 10), bg=color2, fg=color3, command=lambda: settings_frame.destroy())
     set_close.grid(row=3, column=0, pady=10, columnspan=3)
@@ -358,79 +336,92 @@ def update_theme():
     # Tabs
     thetab_manager.reset_tab_colors()
 
+def setup_ui():
+    global root, top_frame, markdown_frame, tabsframe, add_new_tabB
+    global markdown_box, linenumbers, realtext_frame, realtext_box, thetab_manager
+    global color1, color2, color3, file_path
 
+    # Initialize colors based on theme
+    color1 = 'gray30'
+    color2 = 'gray15'
+    color3 = 'white'
+    if database_host.get_setting('theme') == 'light':
+        color1 = 'gray85'
+        color2 = 'gray70'
+        color3 = 'black'
 
+    # Initialize file path
+    file_path = ""
 
-    
-# -------------------- Top Frame --------------------
-global top_frame
-top_frame = tk.Frame(root, height=1, bg=color2)
-top_frame.pack(fill='x', padx=10, pady=10)
+    # Root window configuration
+    root = tk.Tk()
+    root.title("MarkEd")
+    root.iconbitmap('icon.ico')
+    root.configure(bg=color2)
 
-open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
-open_btn.grid(row=0, column=0, padx=5, sticky='w')
+    # Top Frame
+    top_frame = tk.Frame(root, height=1, bg=color2)
+    top_frame.pack(fill='x', padx=10, pady=10)
 
-save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief='flat', overrelief='solid')
-save_btn.grid(row=0, column=1, padx=5, sticky='w')
+    open_btn = tk.Button(top_frame, text="Open file", height=1, command=open_file, relief='flat', overrelief='solid')
+    open_btn.grid(row=0, column=0, padx=5, sticky='w')
 
-settingsB = tk.Button(top_frame, text="\u2699 Settings", height=1, relief='flat', overrelief='solid', command=settings_fun)
-top_frame.grid_columnconfigure(0, weight=0)
-top_frame.grid_columnconfigure(1, weight=0)
-top_frame.grid_columnconfigure(2, weight=1)
-settingsB.grid(row=0, column=2, padx=5, sticky='e')
+    save_btn = tk.Button(top_frame, text="Save file", height=1, command=save, relief='flat', overrelief='solid')
+    save_btn.grid(row=0, column=1, padx=5, sticky='w')
 
+    settingsB = tk.Button(top_frame, text="\u2699 Settings", height=1, relief='flat', overrelief='solid', command=settings_fun)
+    top_frame.grid_columnconfigure(0, weight=0)
+    top_frame.grid_columnconfigure(1, weight=0)
+    top_frame.grid_columnconfigure(2, weight=1)
+    settingsB.grid(row=0, column=2, padx=5, sticky='e')
 
+    # Markdown Frame
+    markdown_frame = tk.Frame(root, bg=color1)
+    markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
-# -------------------- Markdown Frame --------------------
-global markdown_frame
-markdown_frame = tk.Frame(root, bg=color1)
-markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+    # Tabs Frame
+    tabsframe = tk.Frame(markdown_frame, height=30, bg=color2)
+    tabsframe.pack(side='top', fill='x')
+    tabsframe.pack_propagate(False)
 
-# -------------------- Tabs Frame --------------------
-global tabsframe, add_new_tabB
-tabsframe = tk.Frame(markdown_frame, height=30, bg=color2)
-tabsframe.pack(side='top', fill='x')
-tabsframe.pack_propagate(False)
+    add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg=color1, fg=color3, relief='flat', overrelief='solid', command=lambda: new_tab(thetab_manager))
+    add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
 
-add_new_tabB = tk.Button(tabsframe, text='+ Create New File', bg=color1, fg=color3, relief='flat', overrelief='solid', command=lambda: new_tab(thetab_manager))
-add_new_tabB.pack(fill='both', expand=True, side='left', padx=1, pady=0)
+    # Markdown Box
+    markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
+    markdown_box.pack(side='right', fill='both', expand=True)
 
+    linenumbers = TextLineNumbers(markdown_frame, width=30)
+    linenumbers.attach(markdown_box)
+    linenumbers.pack(side='left', fill='y')
 
-# -------------------- Markdown Box --------------------
-global markdown_box, linenumbers
-markdown_box = CustomText(markdown_frame, insertbackground=color3, insertwidth=1, tabs='    ', height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color2, font=('Consolas', 11))
-markdown_box.pack(side='right', fill='both', expand=True)
+    # Markdown Box Bindings
+    markdown_box.bind("<KeyPress>", update_text, add="+")
+    markdown_box.attach(linenumbers)
+    markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
+    markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
+    markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
+    markdown_box.linenumbers.redraw()
 
-linenumbers = TextLineNumbers(markdown_frame, width=30)
-linenumbers.attach(markdown_box)
-linenumbers.pack(side='left', fill='y')
+    # Realtext frame
+    realtext_frame = tk.Frame(root)
+    realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
 
-    # >> Markdown Box Bindings <<
-markdown_box.bind("<KeyPress>", update_text, add="+")
-markdown_box.attach(linenumbers)
-markdown_box.bind("<KeyPress>", markdown_box.redraw_line_numbers, add="+")
-markdown_box.bind("<MouseWheel>", markdown_box.redraw_line_numbers)
-markdown_box.bind("<ButtonRelease-1>", markdown_box.redraw_line_numbers)
-markdown_box.linenumbers.redraw()
+    realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
+    realtext_box.pack(fill='both', expand=True)
 
-# -------------------- Realtext frame --------------------
-global realtext_frame, realtext_box
-realtext_frame = tk.Frame(root)
-realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
+    # Initialize Tab Manager
+    thetab_manager = TabManager()
+    new_tab(thetab_manager)
 
-realtext_box = tk.Text(realtext_frame, height=30, width=90, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
-realtext_box.pack(fill='both', expand=True)
+    # Global Bindings
+    root.bind('<Control-s>', save)
+    root.bind('<Control-o>', open_file)
 
+def main():
+    """Main function to initialize and run the Markdown editor application."""
+    setup_ui()
+    root.mainloop()
 
-
-# -------------------- Run Essential Functions --------------------
-global thetab_manager
-thetab_manager = TabManager()
-new_tab(thetab_manager)
-
-# -------------------- Bindings -----------------------------------
-root.bind('<Control-s>', save)
-root.bind('<Control-o>', open_file)
-
-# -------------------- Mainloop --------------------
-root.mainloop()
+if __name__ == "__main__":
+    main()
