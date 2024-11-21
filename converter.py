@@ -9,6 +9,15 @@ if database_host.get_setting('theme') == 'light':
     color1 = 'gray85'
     color2 = 'gray70'
     color3 = 'black'
+def update_convtheme():
+    global color1, color2, color3
+    color1 = 'gray30'
+    color2 = 'gray15'
+    color3 = 'white'
+    if database_host.get_setting('theme') == 'light':
+        color1 = 'gray85'
+        color2 = 'gray70'
+        color3 = 'black'
 
 def parsed_to_readable(parsed_text, escape_positions, textbox):
     split_text = parsed_text.split("(newline)")
