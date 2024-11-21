@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from markdown_parser import parse_markdown
-from converter import parsed_to_readable
+from converter import parsed_to_readable, update_convtheme
 import os
 import database_host
 
@@ -335,6 +335,9 @@ def update_theme():
     realtext_box.configure(bg=color1, fg=color3, selectbackground=color1)
     # Tabs
     thetab_manager.reset_tab_colors()
+    update_convtheme()
+    update_text()
+
 
 def setup_ui():
     global root, top_frame, markdown_frame, tabsframe, add_new_tabB
