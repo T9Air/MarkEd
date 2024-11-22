@@ -1,10 +1,21 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+import sys
+import os
 from markdown_parser import parse_markdown
 from converter import parsed_to_readable, update_convtheme
-import os
+
 import database_host
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = getattr(sys, '_MEIPASS', os.path.abspath(".")) if hasattr(sys, '_MEIPASS') else os.path.abspath(".")
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class CustomText(tk.Text):
     def __init__(self, *args, **kwargs):
@@ -372,7 +383,7 @@ def setup_ui():
     # Root window configuration
     root = tk.Tk()
     root.title("MarkEd")
-    root.iconbitmap('icon.ico')
+    root.iconbitmap(resource_path('icon.ico'))
     root.configure(bg=color2)
     root.state('zoomed')  # Start maximized instead of fullscreen
 

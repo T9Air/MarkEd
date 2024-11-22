@@ -1,0 +1,83 @@
+name: Build Executables
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10']
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --name MarkEd \
+                   --onefile \
+                   --windowed \
+                   --icon icon.ico \
+                   --add-data "icon.ico:." \
+                   --add-data "info.db:." \
+                   main.py
+    
+    - name: Get version
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+    
+    - name: Package for Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd dist
+        mv MarkEd.exe "../MarkEd-${{ env.VERSION }}.exe"
+    
+    - name: Package for MacOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        cd dist
+        mkdir -p MarkEd.app/Contents/MacOS
+        cp MarkEd MarkEd.app/Contents/MacOS/
+        hdiutil create -volname "MarkEd-${{ env.VERSION }}" -srcfolder MarkEd.app -ov -format UDZO "MarkEd-${{ env.VERSION }}.dmg"
+        mv "MarkEd-${{ env.VERSION }}.dmg" ../
+    
+    - name: Package for Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        mkdir -p deb/usr/local/bin
+        cp dist/MarkEd deb/usr/local/bin/
+        dpkg-deb --build deb "MarkEd-${{ env.VERSION }}.deb"
+        mv "MarkEd-${{ env.VERSION }}.deb" ./
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: MarkEd-${{ matrix.os }}
+        path: |
+          MarkEd-${{ env.VERSION }}.exe
+          MarkEd-${{ env.VERSION }}.dmg
+          MarkEd-${{ env.VERSION }}.deb
+
+    - name: Attach to Release
+      uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
+      with:
+        files: |
+          MarkEd-${{ env.VERSION }}.exe
+          MarkEd-${{ env.VERSION }}.dmg
+          MarkEd-${{ env.VERSION }}.deb
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
