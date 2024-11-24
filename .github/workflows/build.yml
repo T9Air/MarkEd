@@ -57,10 +57,28 @@ jobs:
     - name: Package for Linux
       if: matrix.os == 'ubuntu-latest'
       run: |
+        # Create Debian package structure
+        mkdir -p deb/DEBIAN
         mkdir -p deb/usr/local/bin
+        
+        # Create control file
+        cat > deb/DEBIAN/control << EOF
+        Package: MarkEd
+        Version: ${VERSION#v}
+        Section: utils
+        Priority: optional
+        Architecture: amd64
+        Maintainer: T9Air <aymorg1@gmail.com>
+        Description: MarkEd
+         An intuitive, cross-platform, real-time Markdown editor built with Python.
+        EOF
+        
+        # Copy binary
         cp dist/MarkEd deb/usr/local/bin/
+        
+        # Build and move package
         dpkg-deb --build deb "MarkEd-${{ env.VERSION }}.deb"
-        mv "MarkEd-${{ env.VERSION }}.deb" ./
+        mv "MarkEd-${{ env.VERSION }}.deb" ./ 
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
