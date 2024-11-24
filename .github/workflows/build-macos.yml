@@ -1,0 +1,68 @@
+
+name: Build macOS Executable
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+    
+    - name: Convert icon
+      run: |
+        mkdir icon.iconset
+        sips -s format png icon.ico --out icon.iconset/icon_512x512.png
+        sips -z 256 256 icon.iconset/icon_512x512.png --out icon.iconset/icon_256x256.png
+        sips -z 128 128 icon.iconset/icon_512x512.png --out icon.iconset/icon_128x128.png
+        sips -z 64 64 icon.iconset/icon_512x512.png --out icon.iconset/icon_32x32@2x.png
+        sips -z 32 32 icon.iconset/icon_512x512.png --out icon.iconset/icon_32x32.png
+        sips -z 16 16 icon.iconset/icon_512x512.png --out icon.iconset/icon_16x16.png
+        iconutil -c icns icon.iconset
+    
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --name MarkEd \
+                   --onefile \
+                   --windowed \
+                   --icon icon.icns \
+                   --add-data "info.db:." \
+                   main.py
+    
+    - name: Get version
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+    
+    - name: Package
+      run: |
+        cd dist
+        mkdir -p MarkEd.app/Contents/MacOS
+        cp MarkEd MarkEd.app/Contents/MacOS/
+        hdiutil create -volname "MarkEd-${{ env.VERSION }}" -srcfolder MarkEd.app -ov -format UDZO "MarkEd-${{ env.VERSION }}.dmg"
+        mv "MarkEd-${{ env.VERSION }}.dmg" ../
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MarkEd-macos
+        path: MarkEd-${{ env.VERSION }}.dmg
+
+    - name: Attach to Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: MarkEd-${{ env.VERSION }}.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
