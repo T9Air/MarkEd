@@ -1,6 +1,6 @@
 # MarkEd
 
-An intuitive, cross-platform Markdown text editor built with Python
+An intuitive, cross-platform, real-time Markdown editor built with Python
 
 ## Installation
 
