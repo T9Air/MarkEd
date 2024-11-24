@@ -36,9 +36,7 @@ jobs:
     
     - name: Get version
       id: get_version
-      run: |
-        $version = $env:GITHUB_REF -replace 'refs/tags/', ''
-        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $env:GITHUB_ENV
     
     - name: Package
       run: |
