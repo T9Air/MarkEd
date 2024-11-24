@@ -51,7 +51,6 @@ jobs:
         EOF
         cp dist/MarkEd deb/usr/local/bin/
         dpkg-deb --build deb "MarkEd-${{ env.VERSION }}.deb"
-        mv "MarkEd-${{ env.VERSION }}.deb" ./
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
