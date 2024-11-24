@@ -37,6 +37,7 @@ sudo dpkg -i MarkEd-x.x.x.deb
   - [Converter](https://github.com/T9Air/MarkEd/blob/main/Docs/converter-explanation.md)
 - [Currently working Markdown syntax](https://github.com/T9Air/MarkEd/blob/main/Docs/supported-code.md)
 - [Roadmap](https://github.com/T9Air/MarkEd/blob/main/Docs/roadmap.md)
+- [Changelog](https://github.com/T9Air/MarkEd/blob/main/Docs/CHANGELOG.md)
 
 ## License
 
