@@ -1,9 +1,11 @@
-
 name: Build Linux Executable
 
 on:
   release:
     types: [created]
+
+permissions:
+  contents: write
 
 jobs:
   build-linux:
@@ -60,7 +62,9 @@ jobs:
 
     - name: Attach to Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: MarkEd-${{ env.VERSION }}.deb
+        fail_on_unmatched_files: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

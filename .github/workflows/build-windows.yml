@@ -1,9 +1,11 @@
-
 name: Build Windows Executable
 
 on:
   release:
     types: [created]
+
+permissions:
+  contents: write
 
 jobs:
   build-windows:
@@ -49,7 +51,9 @@ jobs:
 
     - name: Attach to Release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: MarkEd-${{ env.VERSION }}.exe
+        fail_on_unmatched_files: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
