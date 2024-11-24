@@ -26,12 +26,12 @@ jobs:
     
     - name: Build with PyInstaller
       run: |
-        pyinstaller --name MarkEd \
-                   --onefile \
-                   --windowed \
-                   --icon icon.ico \
-                   --add-data "icon.ico;." \
-                   --add-data "info.db;." \
+        pyinstaller --name MarkEd `
+                   --onefile `
+                   --windowed `
+                   --icon icon.ico `
+                   --add-data "icon.ico;." `
+                   --add-data "info.db;." `
                    main.py
     
     - name: Get version
