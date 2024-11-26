@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="MarkEd" Language="1033" Version="0.1.0.0" Manufacturer="YourCompany" UpgradeCode="PUT-GUID-HERE">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of MarkEd is already installed." />
+
+    <Media Id="1" Cabinet="cab1.cab" EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="UsersFolder">
+        <Directory Id="UserProfileFolder">
+          <Directory Id="DownloadsFolder" Name="Downloads">
+            <Directory Id="INSTALLFOLDER" Name="MarkEd" />
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="MainExecutable" Guid="PUT-GUID-HERE">
+        <File Id="MarkEd.exe" Source="dist\MarkEd.exe" KeyPath="yes" />
+        <File Id="Icon.ico" Source="icon.ico" />
+        <File Id="Info.db" Source="info.db" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature" Title="MarkEd" Level="1">
+      <ComponentRef Id="MainExecutable" />
+    </Feature>
+
+    <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      <UIRef Id="WixUI_ErrorProgressText" />
+      <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    </UI>
+  </Product>
+</Wix>
