@@ -70,9 +70,7 @@ jobs:
     - name: Create MSI Installer
       run: |
         $env:PATH += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
-        $productCode = [guid]::NewGuid().ToString()
-        echo "ProductCode=$productCode" >> $env:GITHUB_ENV
-        candle.exe -arch x64 -dProductVersion=${{ env.VERSION }} -dProductCode=$productCode installer.wxs
+        candle.exe -arch x64 installer.wxs
         light.exe -ext WixUIExtension installer.wixobj -o "dist\MarkEd-${{ env.VERSION }}.msi"
 
     - name: Clean up license RTF

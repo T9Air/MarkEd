@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="$(var.ProductCode)" Name="MarkEd" Language="1033" Version="$(var.ProductVersion)" Manufacturer="YourCompany" UpgradeCode="6a2156e6-a3c8-4f26-926e-c49e3130b06f">
+  <Product Id="*" Name="MarkEd" Language="1033" Version="0.1.0.0" Manufacturer="YourCompany" UpgradeCode="6a2156e6-a3c8-4f26-926e-c49e3130b06f">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of MarkEd is already installed." />
