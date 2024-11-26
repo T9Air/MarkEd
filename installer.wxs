@@ -10,7 +10,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
         <Directory Id="CompanyFolder" Name="MarkEd">
-          <Directory Id="INSTALLFOLDER" Name="0.1.0.0" />
+          <Directory Id="INSTALLFOLDER" Name="0.1" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
