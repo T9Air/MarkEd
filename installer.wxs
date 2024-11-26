@@ -22,9 +22,6 @@
         <File Id="MarkEd.exe" Source="dist\MarkEd.exe" KeyPath="yes" />
         <File Id="Icon.ico" Source="icon.ico" />
         <File Id="Info.db" Source="info.db" />
-      </Component>
-      
-      <Component Id="ApplicationShortcuts" Guid="1ac86845-9c32-4c2b-8c1d-0036af9d3f3d">
         <Shortcut Id="desktopShortcut" Directory="DesktopFolder" 
                   Name="MarkEd" WorkingDirectory="INSTALLFOLDER"
                   Target="[#MarkEd.exe]"
@@ -33,6 +30,9 @@
                   Name="MarkEd" WorkingDirectory="INSTALLFOLDER"
                   Target="[#MarkEd.exe]"
                   Icon="MarkEdIcon" IconIndex="0" />
+      </Component>
+      
+      <Component Id="ApplicationShortcuts" Guid="1ac86845-9c32-4c2b-8c1d-0036af9d3f3d">
         <RemoveFolder Id="CleanupShortcut" Directory="ApplicationProgramsFolder" On="uninstall" />
         <RegistryValue Root="HKCU" Key="Software\MarkEd" Name="installed" Type="integer" Value="1" KeyPath="yes" />
       </Component>

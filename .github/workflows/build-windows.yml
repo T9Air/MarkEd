@@ -27,6 +27,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller
     
+    - name: Get version
+      id: get_version
+      run: |
+        if ($env:GITHUB_REF -match "refs/tags/(.*)") {
+          $version = $matches[1]
+        } else {
+          $version = "0.1.0"
+        }
+        echo "VERSION=$version" >> $env:GITHUB_ENV
+    
     - name: Build with PyInstaller
       run: |
         pyinstaller --name MarkEd `
@@ -51,13 +61,9 @@ jobs:
         $env:PATH += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
         candle.exe -arch x64 installer.wxs
         light.exe -ext WixUIExtension installer.wixobj -o "MarkEd-${{ env.VERSION }}.msi"
-    
+
     - name: Clean up license RTF
       run: Remove-Item license.rtf
-    
-    - name: Get version
-      id: get_version
-      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $env:GITHUB_ENV
     
     - name: Package
       run: |
