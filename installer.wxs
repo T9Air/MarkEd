@@ -30,12 +30,12 @@
         <File Id="Icon.ico" Source="icon.ico" />
         <File Id="Info.db" Source="info.db" />
       </Component>
-      <Component Id="ApplicationShortcuts" Guid="*">
+      <Component Id="ApplicationShortcuts" Guid="1ac86845-9c32-4c2b-8c1d-0036af9d3f3d">
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\MarkEd" 
                        Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
-      <Component Id="PathComponent" Guid="*">
+      <Component Id="PathComponent" Guid="b66b1c1c-a789-4d4c-a866-f4629e2df073">
         <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" 
                      Permanent="no" Part="last" Action="set" System="yes" />
       </Component>
