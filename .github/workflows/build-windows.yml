@@ -48,9 +48,10 @@ jobs:
     
     - name: Create MSI Installer
       run: |
-        candle.exe installer.wxs
-        light.exe -ext WixUIExtension installer.wixobj -o dist/MarkEd-${{ env.VERSION }}.msi
-
+        $env:PATH += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
+        candle.exe -arch x64 installer.wxs
+        light.exe -ext WixUIExtension installer.wixobj -o "MarkEd-${{ env.VERSION }}.msi"
+    
     - name: Clean up license RTF
       run: Remove-Item license.rtf
     

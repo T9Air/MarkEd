@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="MarkEd" Language="1033" Version="0.1.0.0" Manufacturer="YourCompany" UpgradeCode="PUT-GUID-HERE">
-    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
+  <Product Id="*" Name="MarkEd" Language="1033" Version="0.1.0.0" Manufacturer="YourCompany" UpgradeCode="6a2156e6-a3c8-4f26-926e-c49e3130b06f">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of MarkEd is already installed." />
 
     <Media Id="1" Cabinet="cab1.cab" EmbedCab="yes" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="UsersFolder">
-        <Directory Id="UserProfileFolder">
-          <Directory Id="DownloadsFolder" Name="Downloads">
-            <Directory Id="INSTALLFOLDER" Name="MarkEd" />
-          </Directory>
-        </Directory>
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="MarkEd" />
       </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="MarkEd"/>
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
 
     <DirectoryRef Id="INSTALLFOLDER">
-      <Component Id="MainExecutable" Guid="PUT-GUID-HERE">
-        <File Id="MarkEd.exe" Source="dist\MarkEd.exe" KeyPath="yes" />
+      <Component Id="MainExecutable" Guid="88e4d362-19bf-4c8d-9f6c-376c52544987">
+        <File Id="MarkEd.exe" Source="dist\MarkEd.exe" KeyPath="yes">
+          <Shortcut Id="desktopShortcut" Directory="DesktopFolder" 
+                    Name="MarkEd" WorkingDirectory="INSTALLFOLDER" 
+                    Icon="MarkEdIcon" IconIndex="0" Advertise="yes" />
+          <Shortcut Id="startMenuShortcut" Directory="ApplicationProgramsFolder"
+                    Name="MarkEd" WorkingDirectory="INSTALLFOLDER"
+                    Icon="MarkEdIcon" IconIndex="0" Advertise="yes" />
+        </File>
         <File Id="Icon.ico" Source="icon.ico" />
         <File Id="Info.db" Source="info.db" />
+      </Component>
+      <Component Id="ApplicationShortcuts" Guid="*">
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\MarkEd" 
+                       Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+      <Component Id="PathComponent" Guid="*">
+        <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" 
+                     Permanent="no" Part="last" Action="set" System="yes" />
       </Component>
     </DirectoryRef>
 
     <Feature Id="MainFeature" Title="MarkEd" Level="1">
       <ComponentRef Id="MainExecutable" />
+      <ComponentRef Id="ApplicationShortcuts" />
+      <ComponentRef Id="PathComponent" />
     </Feature>
 
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
@@ -36,5 +54,7 @@
       <UIRef Id="WixUI_ErrorProgressText" />
       <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     </UI>
+
+    <Icon Id="MarkEdIcon" SourceFile="icon.ico" />
   </Product>
 </Wix>
