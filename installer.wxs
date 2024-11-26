@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="MarkEd" Language="1033" Version="0.1.0.0" Manufacturer="YourCompany" UpgradeCode="6a2156e6-a3c8-4f26-926e-c49e3130b06f">
+  <Product Id="*" Name="MarkEd" Language="1033" Version="0.1.0.0" Manufacturer="T9Air" UpgradeCode="6a2156e6-a3c8-4f26-926e-c49e3130b06f">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of MarkEd is already installed." />
@@ -9,8 +9,8 @@
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
-        <Directory Id="CompanyFolder" Name="YourCompany">
-          <Directory Id="INSTALLFOLDER" Name="MarkEd" />
+        <Directory Id="CompanyFolder" Name="MarkEd">
+          <Directory Id="INSTALLFOLDER" Name="0.1.0.0" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
