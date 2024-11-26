@@ -1,9 +1,6 @@
 name: Build Windows Installer
 
 on:
-  push:
-    branches:
-      - main
   release:
     types: [created]
 
@@ -53,8 +50,22 @@ jobs:
     
     - name: Create License RTF
       run: |
+        function Escape-RtfSpecialChars {
+            param (
+                [string]$text
+            )
+            $text = $text -replace '\\', '\\\\'
+            $text = $text -replace '{', '\{'
+            $text = $text -replace '}', '\}'
+            $text = $text -replace '\n', '\par '
+            return $text
+        }
         $content = Get-Content -Raw LICENSE
-        $content | Out-File -FilePath license.rtf -Encoding UTF8
+        $escapedText = Escape-RtfSpecialChars -text $content
+        $rtfHeader = "{\rtf1\ansi\deff0{\fonttbl{\f0\fswiss Helvetica;}}\f0\pard "
+        $rtfFooter = "}"
+        $rtfContent = $rtfHeader + $escapedText + $rtfFooter
+        Set-Content -Path "license.rtf" -Value $rtfContent
     
     - name: Create MSI Installer
       run: |
