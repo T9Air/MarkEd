@@ -9,7 +9,9 @@
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
-        <Directory Id="INSTALLFOLDER" Name="MarkEd" />
+        <Directory Id="CompanyFolder" Name="YourCompany">
+          <Directory Id="INSTALLFOLDER" Name="MarkEd" />
+        </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="ApplicationProgramsFolder" Name="MarkEd"/>
@@ -20,6 +22,10 @@
     <DirectoryRef Id="INSTALLFOLDER">
       <Component Id="MainExecutable" Guid="88e4d362-19bf-4c8d-9f6c-376c52544987">
         <RegistryValue Root="HKCU" Key="Software\MarkEd" Name="ExeLocation" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+        <RemoveFile Id="CleanupMainExecutable" Name="MarkEd.exe" On="uninstall" />
+        <RemoveFile Id="CleanupIcon" Name="icon.ico" On="uninstall" />
+        <RemoveFile Id="CleanupDB" Name="info.db" On="uninstall" />
+        <RemoveFolder Id="CleanupInstallFolder" On="uninstall" />
         <File Id="MarkEd.exe" Source="dist\MarkEd.exe" />
         <File Id="Icon.ico" Source="icon.ico" />
         <File Id="Info.db" Source="info.db" />
@@ -52,11 +58,19 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="CompanyFolder">
+      <Component Id="CleanupCompanyFolder" Guid="*">
+        <RemoveFolder Id="CompanyFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\MarkEd\Cleanup" Name="CompanyFolder" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
     <Feature Id="MainFeature" Title="MarkEd" Level="1">
       <ComponentRef Id="MainExecutable" />
       <ComponentRef Id="ApplicationShortcuts" />
       <ComponentRef Id="PathComponent" />
       <ComponentRef Id="CleanupMainApplicationFolder" />
+      <ComponentRef Id="CleanupCompanyFolder" />
     </Feature>
 
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
