@@ -403,9 +403,15 @@ def setup_ui():
     top_frame.grid_columnconfigure(2, weight=1)
     settingsB.grid(row=0, column=2, padx=5, sticky='e')
 
+    # PanedWindow
+    main_paned_window = tk.PanedWindow(root, orient=tk.HORIZONTAL, sashwidth=15, sashcursor='sb_h_double_arrow')
+    main_paned_window.pack(fill=tk.BOTH, expand=True)
+
     # Markdown Frame
-    markdown_frame = tk.Frame(root, bg=color1)
-    markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+    root.update_idletasks()
+    markdown_frame = tk.Frame(root, bg=color1, width=(root.winfo_width()/2))
+    #markdown_frame.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+    main_paned_window.add(markdown_frame)
 
     # Tabs Frame
     tabsframe = tk.Frame(markdown_frame, height=30, bg=color2)
@@ -439,7 +445,8 @@ def setup_ui():
 
     # Realtext frame
     realtext_frame = tk.Frame(root)
-    realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
+    #realtext_frame.pack(side='right', fill='both', expand=True, padx=5, pady=5)
+    main_paned_window.add(realtext_frame)
 
     realtext_box = tk.Text(realtext_frame, height=15, width=45, yscrollcommand=True, bg=color1, fg=color3, selectbackground=color1)
     realtext_box.pack(side='left', fill='both', expand=True)
