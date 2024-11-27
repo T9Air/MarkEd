@@ -369,15 +369,13 @@ def setup_ui():
     global color1, color2, color3, file_path
 
     # Initialize colors based on theme
-    try:
-        theme = database_host.get_setting('theme')
-    except:
-        theme = 'light'  # Fallback to light theme if database read fails
-        database_host.setting_configure('theme', 'light')
-    
-    color1 = 'gray85' if theme == 'light' else 'gray30'
-    color2 = 'gray70' if theme == 'light' else 'gray15'
-    color3 = 'black' if theme == 'light' else 'white'
+    color1 = 'gray30'
+    color2 = 'gray15'
+    color3 = 'white'
+    if database_host.get_setting('theme') == 'light':
+        color1 = 'gray85'
+        color2 = 'gray70'
+        color3 = 'black'
 
     # Initialize file path
     file_path = ""
