@@ -32,4 +32,3 @@ def setting_configure(setting_name, change_to):
 # settings
     # name_of_setting | on_off
     # 'theme'           'dark'
-

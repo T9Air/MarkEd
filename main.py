@@ -331,6 +331,8 @@ def update_theme():
         color1 = 'gray85'
         color2 = 'gray70'
         color3 = 'black'
+    current_theme = database_host.get_setting('theme')
+    database_host.setting_configure('theme', current_theme)
 
     # Root
     root.configure(bg=color2)
@@ -465,8 +467,12 @@ def setup_ui():
     root.bind('<F11>', toggle_maximized)  # Toggle maximize instead of fullscreen
     root.bind('<Escape>', lambda e: root.attributes('-fullscreen', False))  # Exit fullscreen with Escape
 
+    current_theme = database_host.get_setting('theme')
+    update_theme()
+
 def main():
     """Main function to initialize and run the Markdown editor application."""
+    update_theme()  # P8870
     setup_ui()
     root.mainloop()
 
