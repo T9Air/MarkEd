@@ -31,7 +31,6 @@ jobs:
                    --windowed \
                    --icon icon.ico \
                    --add-data "icon.ico:." \
-                   --add-data "info.db:." \
                    main.py
     
     - name: Get version

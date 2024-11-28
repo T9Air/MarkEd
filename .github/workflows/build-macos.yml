@@ -42,7 +42,6 @@ jobs:
                    --onefile \
                    --windowed \
                    --icon icon.icns \
-                   --add-data "info.db:." \
                    main.py
     
     - name: Get version
