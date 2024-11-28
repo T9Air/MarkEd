@@ -11,10 +11,10 @@ if database_host.get_setting('theme') == 'light':
     color3 = 'black'
 def update_convtheme():
     global color1, color2, color3
-    color1 = 'gray30'
+    color1 = database_host.get_setting('theme')
     color2 = 'gray15'
     color3 = 'white'
-    if database_host.get_setting('theme') == 'light':
+    if color1 == 'light':
         color1 = 'gray85'
         color2 = 'gray70'
         color3 = 'black'
