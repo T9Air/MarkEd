@@ -25,6 +25,13 @@ def setting_configure(setting_name, change_to):
     c.execute("UPDATE settings SET on_off=? WHERE name_of_setting=?", (change_to, setting_name))
     Conn.commit()
 
+def check_if_exists():
+    c.execute("SELECT on_off FROM settings WHERE name_of_setting='dark' OR name_of_setting='light'")
+    grabber = c.fetchone()
+    if grabber == None:
+        c.execute("INSERT INTO settings (name_of_setting, on_off) VALUES ('theme', 'dark')")
+        Conn.commit()
+check_if_exists()
 #c.execute("INSERT INTO settings (name_of_setting, on_off) VALUES ('theme', 'dark')")
 
 # --------------- TABLES ---------------
