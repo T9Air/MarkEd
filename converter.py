@@ -20,20 +20,6 @@ def update_convtheme():
         color2 = 'gray70'
         color3 = 'black'
 
-def wrap_text(text, width):
-    words = text.split()
-    lines = []
-    current_line = ""
-    for word in words:
-        if len(current_line) + len(word) + 1 <= width:
-            current_line += " " + word if current_line else word
-        else:
-            lines.append(current_line)
-            current_line = word
-    if current_line:
-        lines.append(current_line)
-    return lines
-
 def parsed_to_readable(parsed_text, escape_positions, textbox):
     split_text = parsed_text.split("(newline)")
     ordered_list_num = 0
@@ -348,10 +334,3 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             skip = False
         
         line_num += 1
-
-        # Wrap text and update escape positions
-        wrapped_lines = wrap_text(line, 80)  # Assuming a width of 80 characters for wrapping
-        for wrapped_line in wrapped_lines:
-            textbox.insert(tk.END, wrapped_line + "\n")
-            line_escape_pos = [pos - len(wrapped_line) for pos in line_escape_pos if pos >= len(wrapped_line)]
-            line = line[len(wrapped_line):]
