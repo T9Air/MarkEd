@@ -1,6 +1,7 @@
 import re
 import database_host
 import tkinter as tk
+import tkinter.font as tkfont
 
 color1 = 'gray30'
 color2 = 'gray15'
@@ -41,6 +42,7 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
     codeblock = False
     
     for line in split_text:
+        count = 0
         line_escape_pos = escape_positions[line_num]
         font_size = None
         
@@ -66,7 +68,15 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
                 font_size = 11
             case None:
                 font_size = 14
-            
+        
+        # Calculate the number of characters that can fit on a line
+        pixel_width = textbox.winfo_width()
+        font_obj = tkfont.Font(font=("Arial", font_size))
+        space_width = font_obj.measure(' ')
+        if space_width == 0:
+            space_width = 1  # Prevent division by zero
+        textbox_width = pixel_width / space_width
+        count_length = int(textbox_width)
         
         if heading_level:
             heading = "h"
@@ -95,6 +105,10 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             textbox.insert(tk.END, str(ordered_list_num) + ". ", "ordered")
             line = line[4:]
             length = len(str(ordered_list_num))
+            count_length -= length + 2
+            space_width = font_obj.measure(' ')
+            char_width = font_obj.measure(str(ordered_list_num) + ". ")
+            count += char_width / space_width
             for j in range(len(line_escape_pos)):
                 line_escape_pos[j - 1] -= 4
         else:
@@ -103,6 +117,7 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Unordered list
         textbox.tag_configure("bullet", font=("Arial", 14, "bold"))
         if line.startswith("(ul)"):
+            count_length -= 3
             textbox.insert(tk.END, " " + u"\u2022" + " ", "bullet")
             line = line[4:]
             for j in range(len(line_escape_pos)):
@@ -112,6 +127,7 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         blockquote_tag = "blockquote" + str(font_size)
         textbox.tag_configure(blockquote_tag, font=("Arial", font_size), background = "gray20")
         if line.startswith("(bq)"):
+            count_length -= 2
             textbox.insert(tk.END, " ", blockquote_tag)
             line = " " + line[4:]
             for j in range(len(line_escape_pos)):
@@ -120,6 +136,7 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Unchecked box
         textbox.tag_configure("unchecked", font=("Arial", 14))
         if line.startswith("(unchecked)"):
+            count_length -= 3
             textbox.insert(tk.END, u"\u2610" + " ", "unchecked")
             line = line[11:]
             for j in range(len(line_escape_pos)):
@@ -128,6 +145,7 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Checked box
         textbox.tag_configure("checked", font=("Arial", 14))
         if line.startswith("(checked)"):
+            count_length -= 3
             textbox.insert(tk.END, u"\u2611" + " ", "unchecked")
             line = line[9:]
             for j in range(len(line_escape_pos)):
@@ -260,6 +278,17 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Adding characters to textbox
         char_num = 0 # Create a variable to store what number character on the line it is up to
         for char in line:
+            space_width = font_obj.measure(' ')
+            char_width = font_obj.measure(char)
+            count += char_width / space_width
+            if count >= count_length:
+                beginning_tag = f"{font_size}"
+                textbox.tag_configure(beginning_tag, font=("Arial", font_size))
+                tabs = int(textbox_width - count_length)
+                textbox.insert(tk.END, "\n")
+                textbox.insert(tk.END, " " * tabs, beginning_tag)
+                count = 0
+                
             char_num = char_num + 1
             
             if char_num in bold_characters or heading == "h":
