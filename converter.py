@@ -59,8 +59,6 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         pixel_width = textbox.winfo_width()
         font_obj = tkfont.Font(font=("Arial", font_size))
         space_width = font_obj.measure(' ')
-        if space_width == 0:
-            space_width = 1  # Prevent division by zero
         textbox_width = pixel_width / space_width
         count_length = int(textbox_width)
         
@@ -88,13 +86,13 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         textbox.tag_configure("ordered", font=("Arial", 14))
         if line.startswith("(ol)"):
             ordered_list_num += 1
-            textbox.insert(tk.END, str(ordered_list_num) + ". ", "ordered")
-            line = line[4:]
-            length = len(str(ordered_list_num))
-            count_length -= length + 2
+            list_prefix = str(ordered_list_num) + ". "
+            line = list_prefix + line[4:]  # Prepend the number to the line instead of separate insert
             space_width = font_obj.measure(' ')
-            char_width = font_obj.measure(str(ordered_list_num) + ". ")
-            count += char_width / space_width
+            char_width = font_obj.measure(list_prefix)
+            indent = char_width / space_width
+            count_length -= indent
+            count -= 2
             for j in range(len(line_escape_pos)):
                 line_escape_pos[j - 1] -= 4
         else:
@@ -103,7 +101,11 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Unordered list
         textbox.tag_configure("bullet", font=("Arial", 14, "bold"))
         if line.startswith("(ul)"):
-            count_length -= 3
+            space_width = font_obj.measure(' ')
+            char_width = font_obj.measure(" " + u"\u2022" + " ")
+            indent = char_width / space_width
+            count_length -= indent
+            count += 1
             textbox.insert(tk.END, " " + u"\u2022" + " ", "bullet")
             line = line[4:]
             for j in range(len(line_escape_pos)):
@@ -113,7 +115,10 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         blockquote_tag = "blockquote" + str(font_size)
         textbox.tag_configure(blockquote_tag, font=("Arial", font_size), background = "gray20")
         if line.startswith("(bq)"):
-            count_length -= 2
+            space_width = font_obj.measure(' ')
+            char_width = font_obj.measure("  ")
+            indent = char_width / space_width
+            count_length -= indent
             textbox.insert(tk.END, " ", blockquote_tag)
             line = " " + line[4:]
             for j in range(len(line_escape_pos)):
@@ -122,7 +127,11 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Unchecked box
         textbox.tag_configure("unchecked", font=("Arial", 14))
         if line.startswith("(unchecked)"):
-            count_length -= 3
+            space_width = font_obj.measure(' ')
+            char_width = font_obj.measure(u"\u2610" + " ")
+            indent = char_width / space_width
+            count_length -= indent
+            count += 2
             textbox.insert(tk.END, u"\u2610" + " ", "unchecked")
             line = line[11:]
             for j in range(len(line_escape_pos)):
@@ -131,7 +140,11 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
         # Checked box
         textbox.tag_configure("checked", font=("Arial", 14))
         if line.startswith("(checked)"):
-            count_length -= 3
+            space_width = font_obj.measure(' ')
+            char_width = font_obj.measure(u"\u2611" + " ")
+            indent = char_width / space_width
+            count_length -= indent
+            count += 2
             textbox.insert(tk.END, u"\u2611" + " ", "unchecked")
             line = line[9:]
             for j in range(len(line_escape_pos)):
@@ -270,10 +283,9 @@ def parsed_to_readable(parsed_text, escape_positions, textbox):
             if count >= count_length:
                 beginning_tag = f"{font_size}"
                 textbox.tag_configure(beginning_tag, font=("Arial", font_size))
-                tabs = int(textbox_width - count_length)
                 textbox.insert(tk.END, "\n")
-                textbox.insert(tk.END, " " * tabs, beginning_tag)
-                count = 0
+                textbox.insert(tk.END, " " * int(indent), beginning_tag)
+                count = (char_width / space_width) * 2
                 
             char_num = char_num + 1
             
